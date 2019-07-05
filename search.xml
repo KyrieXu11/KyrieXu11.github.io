@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[如何更改VSCODE的插件安装位置]]></title>
     <url>%2F2019%2F07%2F05%2F%E5%A6%82%E4%BD%95%E6%9B%B4%E6%94%B9VSCODE%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E4%BD%8D%E7%BD%AE%2F</url>
-    <content type="text"><![CDATA[用vscode来写博客真的爽啊，vscode的颜值不用多说，还可以直接在vscode中打开终端，进行博客的操作，所以今天来说一下vscode的扩展安装位置怎么改。1.vscode的扩展默认安装位置是在C:\Users\用户名.vscode\extensions.2.我们无法在vscode中直接改，我们只能指定vscode的启动位置3.在桌面上建立个快捷方式，右键快捷方式,点击属性 4.在目标后面加上--extensions-dir再加你想放扩展的文件夹，我的文件夹是D:\Program Files (x86)\vscode extensions5.打开这个文件夹康康]]></content>
+    <content type="text"><![CDATA[用vscode来写博客真的爽啊，vscode的颜值不用多说，还可以直接在vscode中打开终端，进行博客的操作，所以今天来说一下vscode的扩展安装位置怎么改。1.vscode的扩展默认安装位置是在C:\Users\用户名.vscode\extensions.2.我们无法在vscode中直接改，我们只能指定vscode的启动位置3.在桌面上建立个快捷方式，右键快捷方式,点击属性 4.在目标后面加上--extensions-dir再加你想放扩展的文件夹，我的文件夹是D:\Program Files (x86)\vscode extensions5.打开这个文件夹康康 另外说一下，vscode写markdown文件的时候不知道为什么全是黄色线线… 还有如果博客图片(整个站点的图片)太多的话上传有点慢…所以最好还是用图床来上传图片。]]></content>
       <categories>
         <category>博客</category>
       </categories>
