@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[PAT-B 1043 输出PATest]]></title>
+    <url>%2F2019%2F07%2F11%2FPAT-B-1043-%E8%BE%93%E5%87%BAPATest%2F</url>
+    <content type="text"><![CDATA[题目给定一个长度不超过 104 的、仅由英文字母构成的字符串。请将字符重新调整顺序，按 PATestPATest.... 这样的顺序输出，并忽略其它字符。当然，六种字符的个数不一定是一样多的，若某种字符已经输出完，则余下的字符仍按 PATest 的顺序打印，直到所有字符都被输出 输入格式：输入在一行中给出一个长度不超过104的、仅由英文字母构成的非空字符串。 输出格式：在一行中按题目要求输出排序后的字符串。题目保证输出非空。 输入样例：redlesPayBestPATTopTeePHPereatitAPPT 输出样例：PATestPATestPTetPTePePee 代码1234567891011121314151617181920212223242526272829303132#include&lt;iostream&gt;using namespace std;int array[256]= &#123;0&#125;;int calTime(char patest[]) &#123; int sum=0,length=sizeof(patest)/sizeof(patest[0]); for(int i=0; i&lt;length; i++) &#123; sum+=patest[i]; &#125; return sum;&#125;int main() &#123; char input,pointer; char patest[]= &#123;'P','A','T','e','s','t'&#125;; int j=0,time=calTime(patest); while((input=getchar())!='\n') &#123; array[input]++; &#125; while(j&lt;time) &#123; for(int i=0; i&lt;6; i++) &#123; pointer=patest[i]; if(array[pointer]!=0) &#123; cout&lt;&lt;pointer; array[pointer]--; &#125; &#125; j++; &#125; return 0;&#125; 一遍通过截图 思路主要通过下标的思想来做这道题]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+      <tags>
+        <tag>PAT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PAT-B 1039 到底买不买]]></title>
     <url>%2F2019%2F07%2F10%2FPAT-B-1039-%E5%88%B0%E5%BA%95%E4%B9%B0%E4%B8%8D%E4%B9%B0%2F</url>
     <content type="text"><![CDATA[题目原题：1039 到底买不买小红想买些珠子做一串自己喜欢的珠串。卖珠子的摊主有很多串五颜六色的珠串，但是不肯把任何一串拆散了卖。于是小红要你帮忙判断一下，某串珠子里是否包含了全部自己想要的珠子？如果是，那么告诉她有多少多余的珠子；如果不是，那么告诉她缺了多少珠子。 为方便起见，我们用[0-9]、[a-z]、[A-Z]范围内的字符来表示颜色。例如在图1中，第3串是小红想做的珠串；那么第1串可以买，因为包含了全部她想要的珠子，还多了8颗不需要的珠子；第2串不能买，因为没有黑色珠子，并且少了一颗红色的珠子。 输入格式：每个输入包含 1 个测试用例。每个测试用例分别在 2 行中先后给出摊主的珠串和小红想做的珠串，两串都不超过 1000 个珠子。 输出格式：如果可以买，则在一行中输出 Yes 以及有多少多余的珠子；如果不可以买，则在一行中输出 No 以及缺了多少珠子。其间以 1 个空格分隔。 输入样例 1：12ppRYYGrrYBR2258YrR8RrY 输出样例 1：Yes 8 输入样例 2：12ppRYYGrrYB225YrR8RrY 输出样例 2：No 2 程序：123456789101112131415161718192021222324252627282930313233343536#include&lt;iostream&gt;using namespace std;int bead[256]= &#123;0&#125;;bool judge(char x,int &amp;dvalue) &#123; if(bead[x]!=0) &#123; bead[x]--; return true; &#125; else &#123; dvalue++; return false; &#125;&#125;int main() &#123; char input,des; int sumInput=0,sumDes=0,dvalue=0; bool flag=true; while((input=getchar())!='\n') &#123; bead[input]++; sumInput++; &#125; while((des=getchar())!='\n') &#123; if(!judge(des,dvalue))&#123; flag=false; &#125; sumDes++; &#125; if(!flag)&#123; cout&lt;&lt;"No "&lt;&lt;dvalue&lt;&lt;endl; &#125; else&#123; cout&lt;&lt;"Yes "&lt;&lt;sumInput-sumDes&lt;&lt;endl; &#125; return 0;&#125; 一遍通过截图: 思路：1.使用了一个数组bead存放目标珠子串中对应字符出现的次数，下标就是[0-9] [a-z] [A-Z]，长度为256是因为ASCII码到256时(之后应该没了)2.使用了一个Judge()函数，函数的第一个参数就是后来要购买的珠子的符号，后一个参数通过引用返回还差多少个珠子(如果目标串不能够组成想要的珠子串的情况)，具体实现就是判断一个字符对应的值在bead数组里面是否为0，如果不为0就将对应字符的值减一(想想串珠子每串一个都要减1个珠子)3.使用两个整型参数存放珠子的值，使用getchar()接受输入4.使用flag来判断这个串是否应该买(一旦judge函数返回的是false，flag永为false)]]></content>
