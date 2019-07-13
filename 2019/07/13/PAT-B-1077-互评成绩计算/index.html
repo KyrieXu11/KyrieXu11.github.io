@@ -94,20 +94,20 @@
 
 
 
-  <meta name="description" content="题目科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式 [+-][1-9].[0-9]+E[+-][0-9]+，即数字的整数部分只有 1 位，小数部分至少有 1 位，该数字及其指数部分的正负号即使对正数也必定明确给出。 现以科学计数法的格式给出实数 A，请编写程序按普通数字表示法输出 A，并保证所有有效位都被保留。 输入格式：每个输入包含 1 个测试用例，即一个以科学计数">
+  <meta name="description" content="题目在浙大的计算机专业课中，经常有互评分组报告这个环节。一个组上台介绍自己的工作，其他组在台下为其表现评分。最后这个组的互评成绩是这样计算的：所有其他组的评分中，去掉一个最高分和一个最低分，剩下的分数取平均分记为 G1 ;老师给这个组的评分记为 G2。该组得分为 (G1+G2)/2，最后结果四舍五入后保留整数分。本题就要求你写个程序帮助老师计算每个组的互评成绩。 输入格式：输入第一行给出两个正整数">
 <meta name="keywords" content="PAT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PAT-B 1024 科学计数法">
-<meta property="og:url" content="https://KyrieXu11.github.io/2019/07/12/PAT-B-1024-科学计数法/index.html">
+<meta property="og:title" content="PAT-B 1077 互评成绩计算">
+<meta property="og:url" content="https://KyrieXu11.github.io/2019/07/13/PAT-B-1077-互评成绩计算/index.html">
 <meta property="og:site_name" content="Secret Box of Xu">
-<meta property="og:description" content="题目科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式 [+-][1-9].[0-9]+E[+-][0-9]+，即数字的整数部分只有 1 位，小数部分至少有 1 位，该数字及其指数部分的正负号即使对正数也必定明确给出。 现以科学计数法的格式给出实数 A，请编写程序按普通数字表示法输出 A，并保证所有有效位都被保留。 输入格式：每个输入包含 1 个测试用例，即一个以科学计数">
+<meta property="og:description" content="题目在浙大的计算机专业课中，经常有互评分组报告这个环节。一个组上台介绍自己的工作，其他组在台下为其表现评分。最后这个组的互评成绩是这样计算的：所有其他组的评分中，去掉一个最高分和一个最低分，剩下的分数取平均分记为 G1 ;老师给这个组的评分记为 G2。该组得分为 (G1+G2)/2，最后结果四舍五入后保留整数分。本题就要求你写个程序帮助老师计算每个组的互评成绩。 输入格式：输入第一行给出两个正整数">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://i.loli.net/2019/07/12/5d28664e0ec4813463.png">
-<meta property="og:updated_time" content="2019-07-12T11:11:46.221Z">
+<meta property="og:image" content="https://i.loli.net/2019/07/13/5d2987496eb4684683.png">
+<meta property="og:updated_time" content="2019-07-13T07:26:09.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PAT-B 1024 科学计数法">
-<meta name="twitter:description" content="题目科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式 [+-][1-9].[0-9]+E[+-][0-9]+，即数字的整数部分只有 1 位，小数部分至少有 1 位，该数字及其指数部分的正负号即使对正数也必定明确给出。 现以科学计数法的格式给出实数 A，请编写程序按普通数字表示法输出 A，并保证所有有效位都被保留。 输入格式：每个输入包含 1 个测试用例，即一个以科学计数">
-<meta name="twitter:image" content="https://i.loli.net/2019/07/12/5d28664e0ec4813463.png">
+<meta name="twitter:title" content="PAT-B 1077 互评成绩计算">
+<meta name="twitter:description" content="题目在浙大的计算机专业课中，经常有互评分组报告这个环节。一个组上台介绍自己的工作，其他组在台下为其表现评分。最后这个组的互评成绩是这样计算的：所有其他组的评分中，去掉一个最高分和一个最低分，剩下的分数取平均分记为 G1 ;老师给这个组的评分记为 G2。该组得分为 (G1+G2)/2，最后结果四舍五入后保留整数分。本题就要求你写个程序帮助老师计算每个组的互评成绩。 输入格式：输入第一行给出两个正整数">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/13/5d2987496eb4684683.png">
 
 
 
@@ -115,7 +115,7 @@
 
   
   
-  <link rel="canonical" href="https://KyrieXu11.github.io/2019/07/12/PAT-B-1024-科学计数法/">
+  <link rel="canonical" href="https://KyrieXu11.github.io/2019/07/13/PAT-B-1077-互评成绩计算/">
 
 
 
@@ -125,7 +125,7 @@
   };
 </script>
 
-  <title>PAT-B 1024 科学计数法 | Secret Box of Xu</title>
+  <title>PAT-B 1077 互评成绩计算 | Secret Box of Xu</title>
   
 
 
@@ -379,7 +379,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2019/07/12/PAT-B-1024-科学计数法/">
+    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2019/07/13/PAT-B-1077-互评成绩计算/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KyrieXu">
@@ -396,7 +396,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PAT-B 1024 科学计数法
+          <h1 class="post-title" itemprop="name headline">PAT-B 1077 互评成绩计算
 
               
             
@@ -422,7 +422,7 @@
                 
               
 
-              <time title="创建时间：2019-07-12 18:49:43 / 修改时间：19:11:46" itemprop="dateCreated datePublished" datetime="2019-07-12T18:49:43+08:00">2019-07-12</time>
+              <time title="创建时间：2019-07-13 15:16:47 / 修改时间：15:26:09" itemprop="dateCreated datePublished" datetime="2019-07-13T15:16:47+08:00">2019-07-13</time>
             </span>
           
 
@@ -468,7 +468,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.3k</span>
+              <span title="本文字数">1.4k</span>
             </span>
           
 
@@ -480,7 +480,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">4 分钟</span>
+              <span title="阅读时长">2 分钟</span>
             </span>
           
 
@@ -499,18 +499,15 @@
       
 
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式 [+-][1-9].[0-9]+E[+-][0-9]+，即数字的整数部分只有 1 位，小数部分至少有 1 位，该数字及其指数部分的正负号即使对正数也必定明确给出。</p>
-<p>现以科学计数法的格式给出实数 A，请编写程序按普通数字表示法输出 A，并保证所有有效位都被保留。</p>
-<h2 id="输入格式："><a href="#输入格式：" class="headerlink" title="输入格式："></a>输入格式：</h2><p>每个输入包含 1 个测试用例，即一个以科学计数法表示的实数 A。该数字的存储长度不超过 9999 字节，且其指数的绝对值不超过 9999。</p>
-<h2 id="输出格式："><a href="#输出格式：" class="headerlink" title="输出格式："></a>输出格式：</h2><p>对每个测试用例，在一行中按普通数字表示法输出 A，并保证所有有效位都被保留，包括末尾的 0。</p>
-<h2 id="输入样例-1："><a href="#输入样例-1：" class="headerlink" title="输入样例 1："></a>输入样例 1：</h2><p>+1.23400E-03</p>
-<h2 id="输出样例-1："><a href="#输出样例-1：" class="headerlink" title="输出样例 1："></a>输出样例 1：</h2><p>0.00123400</p>
-<h2 id="输入样例-2："><a href="#输入样例-2：" class="headerlink" title="输入样例 2："></a>输入样例 2：</h2><p>-1.2E+10</p>
-<h2 id="输出样例-2："><a href="#输出样例-2：" class="headerlink" title="输出样例 2："></a>输出样例 2：</h2><p>-12000000000</p>
-<h2 id="一遍通过截图："><a href="#一遍通过截图：" class="headerlink" title="一遍通过截图："></a>一遍通过截图：</h2><p><img src="https://i.loli.net/2019/07/12/5d28664e0ec4813463.png" alt="1024.png"></p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">string</span> InputNum,s1;</span><br><span class="line">	<span class="keyword">int</span> point,e,num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">bool</span> end=<span class="literal">false</span>;</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;InputNum;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;InputNum.length(); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span>(InputNum[i]==<span class="string">'E'</span>) &#123;</span><br><span class="line">			e=i;</span><br><span class="line">			end=<span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(InputNum[i]==<span class="string">'.'</span>) &#123; <span class="comment">//这里其实可以不要</span></span><br><span class="line">			point=i;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span>(!end) &#123;</span><br><span class="line">			s1+=InputNum[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=e+<span class="number">2</span>; i&lt;InputNum.length(); i++) &#123;</span><br><span class="line">		num+=(InputNum[i]-<span class="string">'0'</span>)*<span class="built_in">pow</span>(<span class="number">10</span>,InputNum.length()-i<span class="number">-1</span>);		<span class="comment">//求后面数字的大小 </span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(s1[<span class="number">0</span>]==<span class="string">'+'</span>) &#123;			<span class="comment">//判断数字符号为'+'的情况 </span></span><br><span class="line">		s1.erase(<span class="number">0</span>,<span class="number">1</span>);			<span class="comment">//去除符号 </span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(InputNum[e+<span class="number">1</span>]==<span class="string">'-'</span>) &#123;		<span class="comment">//后面数字的符号如果为'-'则从第一个数开始插入0，最后在第一个位置插入'.' </span></span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;num; i++) &#123;</span><br><span class="line">				s1.insert(<span class="number">0</span>,<span class="string">"0"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			s1.insert(<span class="number">1</span>,<span class="string">"."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(InputNum[e+<span class="number">1</span>]==<span class="string">'+'</span>) &#123;		<span class="comment">//后面数字的符号为'+' 		</span></span><br><span class="line">			<span class="keyword">if</span>(num&gt;=s1.length()<span class="number">-1</span>)&#123;			<span class="comment">//如果后面数字符号大于小数的位数，则在后面插入Num-length+1个0 </span></span><br><span class="line">				<span class="keyword">int</span> k=num-s1.length()+<span class="number">1</span>;</span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;i++)&#123;</span><br><span class="line">					s1+=<span class="string">'0'</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">				s1.insert(num+<span class="number">1</span>,<span class="string">"."</span>);		<span class="comment">//如果后面数字符号小于小数的位数，直接在s1中的num+1位置插入小数点 </span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span>(s1[<span class="number">0</span>]==<span class="string">'-'</span>) &#123;			<span class="comment">//判断数字符号为'-'的情况 </span></span><br><span class="line">		<span class="keyword">if</span>(InputNum[e+<span class="number">1</span>]==<span class="string">'-'</span>) &#123;		<span class="comment">//数字符号为'-',就在第一个位置插入0，在第二个位置插入小数点 </span></span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;num; i++) &#123;</span><br><span class="line">				s1.insert(<span class="number">1</span>,<span class="string">"0"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			s1.insert(<span class="number">2</span>,<span class="string">"."</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span>(InputNum[e+<span class="number">1</span>]==<span class="string">'+'</span>) &#123;		<span class="comment">//数字符号为'+' </span></span><br><span class="line">			<span class="keyword">if</span>(num&gt;=s1.length()<span class="number">-2</span>)&#123;			<span class="comment">//如果后面的位数大于小数点的位数 </span></span><br><span class="line">				<span class="keyword">int</span> k=num-s1.length()+<span class="number">2</span>;</span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;i++)&#123;</span><br><span class="line">					s1+=<span class="string">'0'</span>;</span><br><span class="line">				&#125; </span><br><span class="line">			&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">				s1.insert(num+<span class="number">2</span>,<span class="string">"."</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span>&lt;&lt;s1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>在浙大的计算机专业课中，经常有互评分组报告这个环节。一个组上台介绍自己的工作，其他组在台下为其表现评分。最后这个组的互评成绩是这样计算的：所有其他组的评分中，去掉一个最高分和一个最低分，剩下的分数取平均分记为 G<sub>1</sub> ;老师给这个组的评分记为 G<sub>2</sub>。该组得分为 (G<sub>1</sub>+G<sub>2</sub>)/2，最后结果四舍五入后保留整数分。本题就要求你写个程序帮助老师计算每个组的互评成绩。</p>
+<h2 id="输入格式："><a href="#输入格式：" class="headerlink" title="输入格式："></a>输入格式：</h2><p>输入第一行给出两个正整数 N（&gt; 3）和 M，分别是分组数和满分，均不超过 100。随后 N 行，每行给出该组得到的 N 个分数（均保证为整型范围内的整数），其中第 1 个是老师给出的评分，后面 N−1 个是其他组给的评分。合法的输入应该是 [0,M] 区间内的整数，若不在合法区间内，则该分数须被忽略。题目保证老师的评分都是合法的，并且每个组至少会有 3 个来自同学的合法评分。</p>
+<h2 id="输出格式："><a href="#输出格式：" class="headerlink" title="输出格式："></a>输出格式：</h2><p>为每个组输出其最终得分。每个得分占一行。</p>
+<h2 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h2><p>6 50<br>42 49 49 35 38 41<br>36 51 50 28 -1 30<br>40 36 41 33 47 49<br>30 250 -25 27 45 31<br>48 0 0 50 50 1234<br>43 41 36 29 42 29</p>
+<h2 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h2><p>42<br>33<br>41<br>31<br>37<br>39</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">calScore</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> score=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;v.size()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">		score+=v.at(i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> score/(v.size()<span class="number">-2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> n,m,score,ts,a[<span class="number">100</span>];</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v[n];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">			<span class="built_in">cin</span>&gt;&gt;score;</span><br><span class="line">			<span class="keyword">if</span>(j==<span class="number">0</span>) ts=score;</span><br><span class="line">			<span class="keyword">if</span>(j&gt;<span class="number">0</span>&amp;&amp;score&gt;=<span class="number">0</span>&amp;&amp;score&lt;=m)&#123;</span><br><span class="line">				v[i].push_back(score);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		sort(v[i].begin(),v[i].end());</span><br><span class="line">		a[i]=round((calScore(v[i])+ts)/<span class="number">2</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="built_in">cout</span>&lt;&lt;a[i]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p><strong>这道题目我无论如何都要记录一下我的解题思路，因为里面的逻辑大多数是用if…else…语句实现的</strong><br>下面来说说我的思路，和网上的应该不一样(是因为我觉得我写的太辣鸡了，我没看网上的思路):<br>1.首先大体的思路就是使用两个字符串，一个字符串接收输入，另一个字符串用来存放输出的字符串。<br>2.其次，先寻找题目要求输入的表达式中<code>E</code>的位置，用一个变量<code>e</code>来存放它，这个对后面计算<em>尾数</em> <del>(大概是这个名称吧)</del>有影响。<br>3.计算尾数，就是通过10的次数×对应位数的数字来计算得出，而次数是由<strong>输入字符串</strong>的长度减去对应数字的位数。<br>4.在注释里面可以看，代码里面就写了这一部分逻辑判断的注释，我觉得我应该看得懂吧(捂脸。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>1.最主要的就是使用了一个<code>vector</code>的整型数组。<br>2.在录入分数的时候把不合要求的分数过滤掉，然后使用<code>algorithm</code>库中的神奇的<code>sort()</code>函数排序。<br>3.调用一个自定义的函数<code>calScore()</code>，这个函数的返回值是<strong>float</strong>的，这很重要。<br>4.再就是使用到了<code>cmath</code>库中的<code>round()</code>函数，这个函数的作用就是将括号中的数字四舍五入，符合题意。</p>
+<h2 id="一遍通过截图"><a href="#一遍通过截图" class="headerlink" title="一遍通过截图"></a>一遍通过截图</h2><p><img src="https://i.loli.net/2019/07/13/5d2987496eb4684683.png" alt="1077.png"></p>
 
       
     </div>
@@ -550,8 +547,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/11/PAT-B-1043-输出PATest/" rel="next" title="PAT-B 1043 输出PATest">
-                <i class="fa fa-chevron-left"></i> PAT-B 1043 输出PATest
+              <a href="/2019/07/12/PAT-B-1024-科学计数法/" rel="next" title="PAT-B 1024 科学计数法">
+                <i class="fa fa-chevron-left"></i> PAT-B 1024 科学计数法
               </a>
             
           </div>
@@ -559,10 +556,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/13/PAT-B-1077-互评成绩计算/" rel="prev" title="PAT-B 1077 互评成绩计算">
-                PAT-B 1077 互评成绩计算 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -720,7 +713,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入格式："><span class="nav-number">1.1.</span> <span class="nav-text">输入格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出格式："><span class="nav-number">1.2.</span> <span class="nav-text">输出格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入样例-1："><span class="nav-number">1.3.</span> <span class="nav-text">输入样例 1：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出样例-1："><span class="nav-number">1.4.</span> <span class="nav-text">输出样例 1：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入样例-2："><span class="nav-number">1.5.</span> <span class="nav-text">输入样例 2：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出样例-2："><span class="nav-number">1.6.</span> <span class="nav-text">输出样例 2：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一遍通过截图："><span class="nav-number">1.7.</span> <span class="nav-text">一遍通过截图：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.8.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解题思路"><span class="nav-number">1.9.</span> <span class="nav-text">解题思路</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入格式："><span class="nav-number">1.1.</span> <span class="nav-text">输入格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出格式："><span class="nav-number">1.2.</span> <span class="nav-text">输出格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入样例："><span class="nav-number">1.3.</span> <span class="nav-text">输入样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出样例："><span class="nav-number">1.4.</span> <span class="nav-text">输出样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.6.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一遍通过截图"><span class="nav-number">1.7.</span> <span class="nav-text">一遍通过截图</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -915,7 +908,7 @@
 
 <script>
   window.livereOptions = {
-    refer: '2019/07/12/PAT-B-1024-科学计数法/'
+    refer: '2019/07/13/PAT-B-1077-互评成绩计算/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
