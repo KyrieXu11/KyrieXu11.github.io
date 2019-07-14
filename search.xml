@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[c++中string类型和数字类型转换]]></title>
+    <url>%2F2019%2F07%2F14%2Fc-%E4%B8%ADstring%E7%B1%BB%E5%9E%8B%E5%92%8C%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%2F</url>
+    <content type="text"><![CDATA[关于思考这个问题的原因 我在做pat的题目的时候碰上一个题目是乙级1054 求平均值的时候遇上了一个问题，那就是string类型的内容是数字的变量怎么转换成纯数字的变量。 解决办法我在网上查找了不同的办法，所以我自己来总结并记录一下我理解的。 1.使用标准库中stringstream头文件中的流处理代码1234567891011121314151617#include&lt;iostream&gt;#include&lt;vector&gt;#include&lt;map&gt;#include&lt;algorithm&gt;#include&lt;string&gt;#include&lt;sstream&gt; using namespace std;int main() &#123; string a="-3.2"; stringstream ss; ss&lt;&lt;a; double b; ss&gt;&gt;b; cout&lt;&lt;b; return 0;&#125; 运行结果 1.当然前面库只需要iostream和sstream,主要还是sstream中的stringstream2.说说具体的用法，就是使用stringstream创建一个对象，然后这个对象的用法就是和标准输入输出流中的cin以及cout用法差不多(废话，都是流处理，肯定是差不多的)3.这样应该能满足使用需求吧，如果不满足以后再添加。 2.使用ato’x’()函数这个x是int、double、long的第一个字母，意思就是把对应的字符串转化成对应的数据类型 代码1234567891011121314#include&lt;iostream&gt;#include&lt;stdlib.h&gt;#include&lt;string&gt;using namespace std;int main()&#123; string a="-3.2"; double b=atof(a.c_str()); cout&lt;&lt;b&lt;&lt;endl; string c="+1"; double d=atof(c.c_str()); cout&lt;&lt;d&lt;&lt;endl; return 0;&#125; 运行结果 有几个需要注意的地方：1.首先是头文件一定要包含stdlib.h，因为这些库函数都是从标准库中调用的，所以一定要加stdlib.h.2.函数参数一定要是一个指针，那string类型的指针怎么得来的？没错，string类中有一个函数c_str()就是获取string类的指针.3.其他要值得注意的地方应该就是数字数据类型转换的问题 做个总结1.关于两种方式的缺点，我没有遇上什么缺点啊什么的，缺点比较，等我以后使用的时候如果有不顺手再补充吧。2.关于我喜欢哪种方式，我个人觉得我更加喜欢第二种，因为比较的简洁，不过选择因人而异吧，第一种也挺好用的。]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PAT-B 1077 互评成绩计算]]></title>
     <url>%2F2019%2F07%2F13%2FPAT-B-1077-%E4%BA%92%E8%AF%84%E6%88%90%E7%BB%A9%E8%AE%A1%E7%AE%97%2F</url>
     <content type="text"><![CDATA[题目在浙大的计算机专业课中，经常有互评分组报告这个环节。一个组上台介绍自己的工作，其他组在台下为其表现评分。最后这个组的互评成绩是这样计算的：所有其他组的评分中，去掉一个最高分和一个最低分，剩下的分数取平均分记为 G1 ;老师给这个组的评分记为 G2。该组得分为 (G1+G2)/2，最后结果四舍五入后保留整数分。本题就要求你写个程序帮助老师计算每个组的互评成绩。 输入格式：输入第一行给出两个正整数 N（&gt; 3）和 M，分别是分组数和满分，均不超过 100。随后 N 行，每行给出该组得到的 N 个分数（均保证为整型范围内的整数），其中第 1 个是老师给出的评分，后面 N−1 个是其他组给的评分。合法的输入应该是 [0,M] 区间内的整数，若不在合法区间内，则该分数须被忽略。题目保证老师的评分都是合法的，并且每个组至少会有 3 个来自同学的合法评分。 输出格式：为每个组输出其最终得分。每个得分占一行。 输入样例：6 5042 49 49 35 38 4136 51 50 28 -1 3040 36 41 33 47 4930 250 -25 27 45 3148 0 0 50 50 123443 41 36 29 42 29 输出样例：423341313739 代码12345678910111213141516171819202122232425262728293031323334#include&lt;iostream&gt;#include&lt;algorithm&gt;#include&lt;vector&gt;#include&lt;cmath&gt;using namespace std;float calScore(vector&lt;int&gt; v)&#123; int score=0; for(int i=1;i&lt;v.size()-1;i++)&#123; score+=v.at(i); &#125; return score/(v.size()-2);&#125;int main()&#123; int n,m,score,ts,a[100]; cin&gt;&gt;n&gt;&gt;m; vector&lt;int&gt; v[n]; for(int i=0;i&lt;n;i++)&#123; for(int j=0;j&lt;n;j++)&#123; cin&gt;&gt;score; if(j==0) ts=score; if(j&gt;0&amp;&amp;score&gt;=0&amp;&amp;score&lt;=m)&#123; v[i].push_back(score); &#125; &#125; sort(v[i].begin(),v[i].end()); a[i]=round((calScore(v[i])+ts)/2); &#125; for(int i=0;i&lt;n;i++)&#123; cout&lt;&lt;a[i]&lt;&lt;endl; &#125; return 0;&#125; 思路1.最主要的就是使用了一个vector的整型数组。2.在录入分数的时候把不合要求的分数过滤掉，然后使用algorithm库中的神奇的sort()函数排序。3.调用一个自定义的函数calScore()，这个函数的返回值是float的，这很重要。4.再就是使用到了cmath库中的round()函数，这个函数的作用就是将括号中的数字四舍五入，符合题意。 一遍通过截图]]></content>
