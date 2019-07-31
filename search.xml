@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[PAT-B 1087 有多少不同的值]]></title>
+    <url>%2F2019%2F07%2F31%2FPAT-B-1087-%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%8D%E5%90%8C%E7%9A%84%E5%80%BC%2F</url>
+    <content type="text"><![CDATA[题目 当自然数 n 依次取 1、2、3、……、N 时，算式 ⌊n/2⌋+⌊n/3⌋+⌊n/5⌋ 有多少个不同的值？（注：⌊x⌋ 为取整函数，表示不超过 x 的最大自然数，即 x 的整数部分。） 输入格式：输入给出一个正整数 N（2≤N≤104) 输出格式：在一行中输出题面中算式取到的不同值的个数。 输入样例： 2017 输出样例： 1480 代码123456789101112131415#include&lt;iostream&gt; #include&lt;set&gt;using namespace std;int main()&#123; int n,sum=0; cin&gt;&gt;n; set&lt;int&gt; s; for(int i=1;i&lt;=n;i++)&#123; sum=i/2+i/3+i/5; s.insert(sum); &#125; cout&lt;&lt;s.size(); return 0;&#125; 这个真的是我做过的最简单的pat乙级题目了…通过的截图就不放了…就是利用set集合的值不重复这个特性来解题…]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+      <tags>
+        <tag>PAT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PAT-B 1044 火星数字]]></title>
     <url>%2F2019%2F07%2F31%2FPAT-B-1044-%E7%81%AB%E6%98%9F%E6%95%B0%E5%AD%97%2F</url>
     <content type="text"><![CDATA[题目 火星人是以 13 进制计数的： 地球人的 0 被火星人称为 tret。地球人数字 1 到 12 的火星文分别为：jan, feb, mar, apr, may, jun, jly, aug, sep, oct, nov, dec。火星人将进位以后的 12 个高位数字分别称为：tam, hel, maa, huh, tou, kes, hei, elo, syy, lok, mer, jou。例如地球人的数字 29 翻译成火星文就是 hel mar；而火星文 elo nov 对应地球数字 115。为了方便交流，请你编写程序实现地球和火星数字之间的互译。 输入格式：输入第一行给出一个正整数 N（&lt;100），随后 N 行，每行给出一个 [0, 169) 区间内的数字 —— 或者是地球文，或者是火星文 输出格式：对应输入的每一行，在一行中输出翻译后的另一种语言的数字。 输入样例： 4 29 5 elo nov tam 输出样例： hel mar may 115 13 通过截图就不放了代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051#include&lt;iostream&gt;#include&lt;cmath&gt;#include&lt;string&gt;#include&lt;stdlib.h&gt;using namespace std;string MarsNum[2][13]= &#123;&#123;"tret","jan","feb","mar","apr","may","jun","jly","aug","sep","oct","nov","dec"&#125;,&#123;"tret","tam","hel","maa","huh","tou","kes","hei","elo","syy","lok","mer","jou"&#125;&#125;;int main() &#123; int n,tmp,sum=0; string s; cin&gt;&gt;n; getchar(); //读掉回车 for(int i=0; i&lt;n; i++) &#123; getline(cin,s); if(s[0]&gt;='0'&amp;&amp;s[0]&lt;='9') &#123; tmp=atoi(s.c_str()); if(tmp/13)&#123; cout&lt;&lt;MarsNum[1][tmp/13]; &#125; if(tmp/13&amp;&amp;tmp%13)&#123; cout&lt;&lt;" "&lt;&lt;MarsNum[0][tmp%13]; &#125; if(!(tmp/13))&#123; cout&lt;&lt;MarsNum[0][tmp%13]; &#125; cout&lt;&lt;endl; &#125; else&#123; for(int i=0;i&lt;13;i++)&#123; if(s.substr(s.length()-3,s.length())==MarsNum[0][i])&#123; sum+=i; break; &#125; else if(s.substr(s.length()-3,s.length())==MarsNum[1][i])&#123; sum+=i*13; break; &#125; &#125; if(s.length()&gt;4)&#123; for(int i=0;i&lt;13;i++)&#123; if(s.substr(0,3)==MarsNum[1][i])&#123; sum+=i*13; &#125; &#125; &#125; cout&lt;&lt;sum&lt;&lt;endl; sum=0; &#125; &#125; return 0;&#125; 几个值得注意的地方1.读入带空格的string类型的数据的时候用getline(cin,string)，但是值得注意的是getline()读入的是回车之前的数据，所以前面如果需要输入数据的话最好还是用getchar()来读掉回车。2.第二个要说的就是思路了，思路就是先创建一个字符串数组，里面按序存放着题目给的字符串，然后再分两种情况，第一种地球数字转火星数字，假如说输入的数字是13的整数倍，那么只需要输入进位之后的火星数字，如果说输入的数字除以13还有余数的话，就通过下标在先前建好的字符串数组中来寻找对应的火星数字。3.第二种火星数字转换成地球数字，看输入的字符串长度，如果小于等于3，那么就直接寻找，然后注意进制转换，如果大于4，说明一定是有进位的，跟着寻找，然后算出结果即可，然后值得注意的是最后一定要设置sum为0!4.总的来说，这道题挺简单的，就是程序设置的很死板，有点不喜欢这种题目，活的程序才是好的程序，不过对于考试，能做出来就行，不管这么多了。]]></content>
