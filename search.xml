@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[经验总结]]></title>
+    <url>%2F2019%2F09%2F08%2FPAT%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%2F</url>
+    <content type="text"><![CDATA[PAT平时做题的总结 输入：如果是一个字符一个字符不停的输入直到按下回车键的话输入方式采用以下方式： 1234567891011#include&lt;stdio.h&gt;while((n=getchar())!='\n')&#123; ......&#125;//当然上面的是C++的，下面是C的while(scanf("%d",&amp;x)!=EOF)&#123; .......&#125; Greater&lt;int&gt;() 和 ess&lt;int&gt;()都是algorithm库中sort()函数的第三个参数的内置参数，表示的排序方式分别是降序和升序 判断素数的快速方法是以下的代码： 1234567891011bool isPrime(int n)&#123; if(n&lt;=1) return false; else if(n==2||n==3) return true; else if(n%6!=1&amp;&amp;n%6!=5) return false; else&#123; for(int i=5;i*i&lt;n;i+=6)&#123; if(n%i==0||n%(i+2)==0) return false; &#125; &#125; return true;&#125; 在写程序的时候可以使用题目中给的一些数据作为数组下标，比如题目给了一个数据的地址是多少多少，比如1075 链表元素分类 注意编程的时候，可能会考察运算的实质，就是模拟运算，比如1017 A除以B，这个题目就是模拟除法的过程。 例如1018 锤子剪刀布这个题目的解法，就是利用数字作为数组的下标来表示出拳的类型，这样就很简便的解决了符号的问题。 小数点的位数问题： 12345678910//c++可以通过包含iomanip库来调用函数cout&lt;&lt;setprecious(n)&lt;&lt;x&lt;&lt;endl;//这个n就代表了输出的数字的总位数，如果位数不足的话，就在数字后面补0。这个如果遇到了小数的话会自动四舍五入。 std::cout &lt;&lt; std::setw(10); std::cout &lt;&lt; 77 &lt;&lt; std::endl;//这个的输出结果是 77 没错就是前面有10个字符的宽度cout&lt;&lt;setfill('0')&lt;&lt;x;//这个就是在数字的前面补0，当然要么搭档setw()，要么搭档setprecious() 123//C里面就直接使用printf()printf("%.2f",x);//这个就是保持小数点后2位小数，这个也是自动四舍五入的。 再一个就是STL容器的遍历问题，直接使用相应的迭代器进行遍历，像如果遇到行尾不能有多余空格的要求的话 12345678910#include&lt;vector&gt;//假设v中有数据vector&lt;int&gt; v;//构造迭代器for(vector&lt;int&gt;::iterator it=v.begin();it!=v.end();it++)&#123; if(it!=(--v.end()))&#123; printf(" "); 这样就满足了行尾不能有空格的情况 &#125;&#125; 还有一个老生常谈的话题，进制转换，直接贴代码，d是进制，n是十进制的数字，res是结果 123456789101112131415#include&lt;iostream&gt;#include&lt;cmath&gt;using namespace std;int main()&#123; int n,d,res=0,i=0; cin&gt;&gt;n&gt;&gt;d; while(n!=0)&#123; res+=(n%d)*pow(10,i); n/=d; i++; &#125; cout&lt;&lt;res; return 0;&#125; 临时变量每次重新定义的时候都没有值的…参见 1084 外观数列 如果看见输入字符串的话，不用局限于使用string来接受输入，可以参考第一条的输入方式，参考1043 输出PATest，可以在输入的时候使用输入的字符作为数组的下标来解决问题。 如果需要输入含有空格字符的字符串的话，使用getline(cin,str)函数，但是使用这个函数的话最好在前面加上一个cin.ignore()来忽略上一个输入的\n，当然如果只需要这一个输入的话，就不用加上这条语句。]]></content>
+      <categories>
+        <category>study</category>
+      </categories>
+      <tags>
+        <tag>PAT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PAT-B 1087 有多少不同的值]]></title>
     <url>%2F2019%2F07%2F31%2FPAT-B-1087-%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%8D%E5%90%8C%E7%9A%84%E5%80%BC%2F</url>
     <content type="text"><![CDATA[题目 当自然数 n 依次取 1、2、3、……、N 时，算式 ⌊n/2⌋+⌊n/3⌋+⌊n/5⌋ 有多少个不同的值？（注：⌊x⌋ 为取整函数，表示不超过 x 的最大自然数，即 x 的整数部分。） 输入格式：输入给出一个正整数 N（2≤N≤104) 输出格式：在一行中输出题面中算式取到的不同值的个数。 输入样例： 2017 输出样例： 1480 代码123456789101112131415#include&lt;iostream&gt; #include&lt;set&gt;using namespace std;int main()&#123; int n,sum=0; cin&gt;&gt;n; set&lt;int&gt; s; for(int i=1;i&lt;=n;i++)&#123; sum=i/2+i/3+i/5; s.insert(sum); &#125; cout&lt;&lt;s.size(); return 0;&#125; 这个真的是我做过的最简单的pat乙级题目了…通过的截图就不放了…就是利用set集合的值不重复这个特性来解题…]]></content>
