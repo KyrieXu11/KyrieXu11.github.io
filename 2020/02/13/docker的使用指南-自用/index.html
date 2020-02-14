@@ -94,18 +94,18 @@
 
 
 
-  <meta name="description" content="运行镜像：docker run ，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像。 查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –di">
+  <meta name="description" content="运行镜像：docker run &amp;lt;image-name&amp;gt;，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像；运行容器：docker run -it [option] &amp;lt;image-name&amp;gt;，这里的option有： -i：交互式">
 <meta name="keywords" content="docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker的使用指南(自用)">
 <meta property="og:url" content="https://KyrieXu11.github.io/2020/02/13/docker的使用指南-自用/index.html">
 <meta property="og:site_name" content="Secret Box of Xu">
-<meta property="og:description" content="运行镜像：docker run ，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像。 查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –di">
+<meta property="og:description" content="运行镜像：docker run &amp;lt;image-name&amp;gt;，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像；运行容器：docker run -it [option] &amp;lt;image-name&amp;gt;，这里的option有： -i：交互式">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-02-13T14:37:27.169Z">
+<meta property="og:updated_time" content="2020-02-14T02:43:08.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker的使用指南(自用)">
-<meta name="twitter:description" content="运行镜像：docker run ，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像。 查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –di">
+<meta name="twitter:description" content="运行镜像：docker run &amp;lt;image-name&amp;gt;，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像；运行容器：docker run -it [option] &amp;lt;image-name&amp;gt;，这里的option有： -i：交互式">
 
 
 
@@ -420,13 +420,23 @@
                 
               
 
-              <time title="创建时间：2020-02-13 22:05:09 / 修改时间：22:37:27" itemprop="dateCreated datePublished" datetime="2020-02-13T22:05:09+08:00">2020-02-13</time>
+              <time title="创建时间：2020-02-13 22:05:09" itemprop="dateCreated datePublished" datetime="2020-02-13T22:05:09+08:00">2020-02-13</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-02-14 10:43:08" itemprop="dateModified" datetime="2020-02-14T10:43:08+08:00">2020-02-14</time>
+              </span>
             
           
 
@@ -466,7 +476,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">612</span>
+              <span title="本文字数">1.2k</span>
             </span>
           
 
@@ -478,7 +488,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">1 分钟</span>
+              <span title="阅读时长">2 分钟</span>
             </span>
           
 
@@ -498,13 +508,15 @@
 
       
         <ol>
-<li>运行镜像：docker run <image-name>，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是<code>lastest</code>也就是最新版本的镜像。</image-name></li>
-<li>查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –digests</li>
-<li>从docker hub拉取镜像：docker pull <image-name></image-name></li>
-<li>在docker hub上搜索镜像：docker search <image-name>，搜索可以使用一些条件搜索，就比如赞star数大于多少的条件搜索，指令的书写形式为：docker search -s 30 <image-name>意思就是star数大于30的镜像搜索结果。</image-name></image-name></li>
+<li>运行镜像：docker run &lt;image-name&gt;，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是<code>lastest</code>也就是最新版本的镜像；运行容器：docker run -it [option] &lt;image-name&gt;，这里的option有： <code>-i</code>：交互式启动容器，一般与<code>-t</code>一起使用；<code>-t</code>为容器重新生成一个伪终端；<code>--name</code>给容器取一个名称；<code>-d</code>后台启动容器；<code>-P</code>：<strong>大写的P</strong>，随机端口映射；<code>-p</code>：指定端口映射……；如果是交互式容器已后台运行模式启动的话，会自动杀死这个进程，这个是docker的一种机制。就比如docker run -d ubuntu，然后输入docker ps，会发现一个容器都没有在运行。</li>
+<li>查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –digests；查看本地特定镜像的信息：docker images &lt;image-name&gt;</li>
+<li>从docker hub拉取镜像：docker pull &lt;image-name&gt;</li>
+<li>在docker hub上搜索镜像：docker search &lt;image-name&gt;，搜索可以使用一些条件搜索，就比如赞star数大于多少的条件搜索，指令的书写形式为：docker search -s 30 &lt;image-name&gt;意思就是star数大于30的镜像搜索结果。</li>
 <li>删除镜像：docker rmi <code>image-name</code>，强制删除：docker rmi -f &lt;image-name|| image-id &gt;，批量删除镜像(强制)：docker rmi -f <code>image-name1</code> <code>image-name2</code>….，如果想要全部删除docker rmi -f $(docker images -aq)</li>
 <li>列出当前所有正在运行的镜像：docker ps，查看当前所有正在运行的镜像的id：docker ps -qa</li>
-<li>退出==容器==：exit 停止并退出；ctrl+p+q 不停止退出</li>
+<li>退出<strong>容器</strong>：exit 停止并退出；ctrl+p+q 不停止退出；进入上一次退出的容器：docker attach &lt;container-id&gt;</li>
+<li>查看上次运行过的容器：docker ps -l [options] option可以指定前几次的容器；查看所有历史运行的容器：docker ps -a；只显示<code>container-id</code>：docker ps -q</li>
+<li>启动容器：docker start &lt;container-id&gt;；停止容器：docker stop &lt;container-id&gt;；删除<strong>已停止的容器</strong>：docker rm &lt;container-id&gt;</li>
 </ol>
 
       
@@ -745,7 +757,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">53 分钟</span>
+    <span title="站点阅读时长">54 分钟</span>
   
 </div>
 
