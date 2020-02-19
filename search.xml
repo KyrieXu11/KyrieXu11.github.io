@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Class和ClassLoader]]></title>
+    <url>%2F2020%2F02%2F19%2FClass%E5%92%8CClassLoader%2F</url>
+    <content type="text"><![CDATA[怎么创建对象的Class来创建对象首先创建一个类： 12345678910111213class TestReflectClass&#123; static &#123; System.out.println("执行了静态代码块"); &#125; public TestReflectClass()&#123; System.out.println("无参构造方法被执行"); &#125; public void TestMethod()&#123; System.out.println("执行了这个方法"); &#125;&#125; 12Class&lt;?&gt; aClass = Class.forName("com/Test/TestReflectClass".replace('/','.'));TestReflectClass reflectClass = (TestReflectClass) aClass.getConstructor().newInstance(); 通过Class类种的一个静态方法forName()来找到对应的类所在的包和名称 构造一个无参构造器 创建实例 ClassLoader来创建对象还是使用上面的类 下面的代码和Class.forName()大同小异: 12Class&lt;?&gt; aClass = ClassLoader.getSystemClassLoader().loadClass("com/Test/TestReflectClass".replace('/','.'));TestReflectClass reflectClass = (TestReflectClass) aClass.getConstructor().newInstance(); 通过调用ClassLoader的静态方法getSystemClassLoader()进而加载类 获取到类对象之后，可以和上面的方法一样的创建出实例来 两次的结果都是一样的 结果 不同点比较如果不是创建对象，那么通过ClassLoader来加载类对象。还能打印出对应的结果吗？ 所以我们现在将创建对象实例的步骤给注释掉，再来对比一下结果： Class加载： ClassLoader加载： 结论来对比一下，可以看到这样的一个现象，在调用Class.forName的时候，就对类进行了一个初始化，由于没有创建对象实例，所以无参构造方法没有被执行，而，ClassLoader是把类加载到了JVM虚拟机中，没有把对象进行一个初始化。]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[docker的使用指南(自用)]]></title>
     <url>%2F2020%2F02%2F13%2Fdocker%E7%9A%84%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97-%E8%87%AA%E7%94%A8%2F</url>
     <content type="text"><![CDATA[运行镜像：docker run &lt;image-name&gt;，值得一说的是，docker在接收到这条指令之后，首先会在本地寻找有没有镜像，如果有的话，就直接运行，如果没有的话，就去docker hub上寻找这个镜像，默认是lastest也就是最新版本的镜像；运行容器：docker run -it [option] &lt;image-name&gt;，这里的option有： -i：交互式启动容器，一般与-t一起使用；-t为容器重新生成一个伪终端；--name给容器取一个名称；-d后台启动容器；-P：大写的P，随机端口映射；-p：指定端口映射……；如果是交互式容器已后台运行模式启动的话，会自动杀死这个进程，这个是docker的一种机制。就比如docker run -d ubuntu，然后输入docker ps，会发现一个容器都没有在运行。 查看本地的镜像：docker images； 查看本地所有镜像的id ：docker images -qa；查看本地镜像的摘要信息：docker images –digests；查看本地特定镜像的信息：docker images &lt;image-name&gt; 从docker hub拉取镜像：docker pull &lt;image-name&gt; 在docker hub上搜索镜像：docker search &lt;image-name&gt;，搜索可以使用一些条件搜索，就比如赞star数大于多少的条件搜索，指令的书写形式为：docker search -s 30 &lt;image-name&gt;意思就是star数大于30的镜像搜索结果。 删除镜像：docker rmi image-name，强制删除：docker rmi -f &lt;image-name|| image-id &gt;，批量删除镜像(强制)：docker rmi -f image-name1 image-name2….，如果想要全部删除docker rmi -f $(docker images -aq) 列出当前所有正在运行的镜像：docker ps，查看当前所有正在运行的镜像的id：docker ps -qa 退出容器：exit 停止并退出；ctrl+p+q 不停止退出；进入上一次退出的容器：docker attach &lt;container-id&gt; 查看上次运行过的容器：docker ps -l [options] option可以指定前几次的容器；查看所有历史运行的容器：docker ps -a；只显示container-id：docker ps -q 启动容器：docker start &lt;container-id&gt;；停止容器：docker stop &lt;container-id&gt;；删除已停止的容器：docker rm &lt;container-id&gt;]]></content>

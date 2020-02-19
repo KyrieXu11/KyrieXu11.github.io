@@ -264,7 +264,7 @@
       
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">8</span></a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">9</span></a>
 
   </li>
         
@@ -282,7 +282,7 @@
       
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">4</span></a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">5</span></a>
 
   </li>
         
@@ -300,7 +300,7 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">18</span></a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">19</span></a>
 
   </li>
 
@@ -504,9 +504,9 @@
         <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！<br><img src="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG" alt><br>本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。</p>
 <h2 id="输入格式："><a href="#输入格式：" class="headerlink" title="输入格式："></a>输入格式：</h2><p>输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的物品种类数。第二行给出 M 个需要被查缴的物品编号，其中编号为 4 位数字。随后 N 行，每行给出一位学生的姓名缩写（由 1-4 个大写英文字母组成）、个人物品数量 K（0 ≤ K ≤ 10）、以及 K 个物品的编号。</p>
 <h2 id="输出格式："><a href="#输出格式：" class="headerlink" title="输出格式："></a>输出格式：</h2><p>顺次检查每个学生携带的物品，如果有需要被查缴的物品存在，则按以下格式输出该生的信息和其需要被查缴的物品的信息（注意行末不得有多余空格）：<br><code>姓名缩写: 物品编号1 物品编号2 ……</code><br>最后一行输出存在问题的学生的总人数和被查缴物品的总数。</p>
-<h2 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span> <span class="number">2</span></span><br><span class="line"><span class="number">2333</span> <span class="number">6666</span></span><br><span class="line">CYLL <span class="number">3</span> <span class="number">1234</span> <span class="number">2345</span> <span class="number">3456</span></span><br><span class="line">U <span class="number">4</span> <span class="number">9966</span> <span class="number">6666</span> <span class="number">8888</span> <span class="number">6666</span></span><br><span class="line">GG <span class="number">2</span> <span class="number">2333</span> <span class="number">7777</span></span><br><span class="line">JJ <span class="number">3</span> <span class="number">0012</span> <span class="number">6666</span> <span class="number">2333</span></span><br></pre></td></tr></table></figure>
+<h2 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">4 2</span><br><span class="line">2333 6666</span><br><span class="line">CYLL 3 1234 2345 3456</span><br><span class="line">U 4 9966 6666 8888 6666</span><br><span class="line">GG 2 2333 7777</span><br><span class="line">JJ 3 0012 6666 2333</span><br></pre></td></tr></table></figure>
 
-<h2 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h2><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">U:</span> <span class="number">6666</span> <span class="number">6666</span></span><br><span class="line"><span class="symbol">GG:</span> <span class="number">2333</span></span><br><span class="line"><span class="symbol">JJ:</span> <span class="number">6666</span> <span class="number">2333</span></span><br><span class="line"><span class="number">3</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<h2 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">U: 6666 6666</span><br><span class="line">GG: 2333</span><br><span class="line">JJ: 6666 2333</span><br><span class="line">3 5</span><br></pre></td></tr></table></figure>
 
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">inf</span>&#123;</span></span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line">	<span class="keyword">int</span> count;</span><br><span class="line">	<span class="keyword">int</span> num[<span class="number">10</span>];</span><br><span class="line">&#125; student[<span class="number">1000</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> n,m;</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">	<span class="keyword">int</span> num,sum=<span class="number">0</span>,cnt=<span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v,a[n];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;num;</span><br><span class="line">		v.push_back(num);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;student[i].name&gt;&gt;student[i].count;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;student[i].count;j++)&#123;</span><br><span class="line">			<span class="built_in">cin</span>&gt;&gt;student[i].num[j];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;v.size();k++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(v[k]==student[i].num[j])&#123;</span><br><span class="line">					a[i].push_back(v[k]);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[i].size()!=<span class="number">0</span>)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;student[i].name&lt;&lt;<span class="string">": "</span>;</span><br><span class="line">			cnt++;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">continue</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;a[i].size();j++)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;setfill(<span class="string">'0'</span>)&lt;&lt;setw(<span class="number">4</span>)&lt;&lt;a[i][j];</span><br><span class="line">			<span class="keyword">if</span>(j!=a[i].size()<span class="number">-1</span>) <span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		sum+=a[i].size();</span><br><span class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span>&lt;&lt;cnt&lt;&lt;<span class="string">" "</span>&lt;&lt;sum;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -640,7 +640,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -665,7 +665,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -698,7 +700,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -771,7 +775,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">32k</span>
+    <span title="站点总字数">34k</span>
   
 
   
@@ -782,7 +786,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">54 分钟</span>
+    <span title="站点阅读时长">56 分钟</span>
   
 </div>
 
@@ -804,7 +808,7 @@
     
   <span title="post.totalcount">
      字 </span>
-    <!--<span title="站点总字数">32k</span>-->
+    <!--<span title="站点总字数">34k</span>-->
   
         
 
