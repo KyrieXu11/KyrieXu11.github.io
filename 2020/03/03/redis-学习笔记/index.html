@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/My-icon-16x16.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/My-icon-16x16.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="配置文件解析1daemonize yes  这一条配置的意思就是在后台启动，以守护进程的方式启动 1pidfile /var/run/redis/redis-server.pid  这条的配置就是将redis-server启动之后的pid写入到这个文件，pid就是进程号 1port 6379  redis-server的默认端口号就是6379 1bind 127.0.0.1  绑定的地址，默认是只">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 学习笔记">
+<meta property="og:url" content="https://KyrieXu11.github.io/2020/03/03/redis-学习笔记/index.html">
+<meta property="og:site_name" content="Secret Box of Xu">
+<meta property="og:description" content="配置文件解析1daemonize yes  这一条配置的意思就是在后台启动，以守护进程的方式启动 1pidfile /var/run/redis/redis-server.pid  这条的配置就是将redis-server启动之后的pid写入到这个文件，pid就是进程号 1port 6379  redis-server的默认端口号就是6379 1bind 127.0.0.1  绑定的地址，默认是只">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/02/14/J4u2BIoRgOG7Upd.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/69uOBsJXviPcg2k.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/Dm5jgQlpOZudVSk.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/hiO436mfsUc2YWL.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/AMIVWPX3rpKfaid.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/QrlX9N8Gm5DeywR.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/T5WpzrIhOePyNt1.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/15/N1WFYw9eC2dmvRj.png">
+<meta property="og:image" content="https://redisbook.readthedocs.io/en/latest/_images/graphviz-a5c804211267a10a5c3ffa47c5b600727191a3be.svg">
+<meta property="og:image" content="https://redisbook.readthedocs.io/en/latest/_images/graphviz-1b226a6d0f09ed1b61a30d899372834634b96504.svg">
+<meta property="og:updated_time" content="2020-03-03T12:01:20.220Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis 学习笔记">
+<meta name="twitter:description" content="配置文件解析1daemonize yes  这一条配置的意思就是在后台启动，以守护进程的方式启动 1pidfile /var/run/redis/redis-server.pid  这条的配置就是将redis-server启动之后的pid写入到这个文件，pid就是进程号 1port 6379  redis-server的默认端口号就是6379 1bind 127.0.0.1  绑定的地址，默认是只">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/14/J4u2BIoRgOG7Upd.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://KyrieXu11.github.io/2020/03/03/redis-学习笔记/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>redis 学习笔记 | Secret Box of Xu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Secret Box of Xu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我不会试图摘月，我要那月亮奔我而来。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">10</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">7</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">21</span></a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2020/03/03/redis-学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KyrieXu">
+      <meta itemprop="description" content="记录生活点滴以及遇到的问题">
+      <meta itemprop="image" content="/images/SecretBoxOfKyrieXu.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Secret Box of Xu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis 学习笔记
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-03 20:00:44 / 修改时间：20:01:20" itemprop="dateCreated datePublished" datetime="2020-03-03T20:00:44+08:00">2020-03-03</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/studey/" itemprop="url" rel="index"><span itemprop="name">studey</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">5.9k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">10 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="配置文件解析"><a href="#配置文件解析" class="headerlink" title="配置文件解析"></a>配置文件解析</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
+
+<p>这一条配置的意思就是在后台启动，以守护进程的方式启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pidfile /var/run/redis/redis-server.pid</span><br></pre></td></tr></table></figure>
+
+<p>这条的配置就是将redis-server启动之后的pid写入到这个文件，pid就是进程号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">port 6379</span><br></pre></td></tr></table></figure>
+
+<p>redis-server的默认端口号就是6379</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>绑定的地址，默认是只能本地连接redis-server，如果要远程连接redis-server，就把这一条配置注释掉就行了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timeout 0</span><br></pre></td></tr></table></figure>
+
+<p>当客户端闲置多长时间的时候关闭连接，如果指定是0那就是禁用这个功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loglevel verbose</span><br></pre></td></tr></table></figure>
+
+<p>redis的日志级别，默认是verbose，这个级别还有：debug、notice、warning</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logfile /var/log/redis/redis-server.log</span><br></pre></td></tr></table></figure>
+
+<p>如果redis是以守护进程启动的，而这个logfile又是stdout的话，那么会默认输出到/dev/null</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">databases 16</span><br></pre></td></tr></table></figure>
+
+<p>默认支持16个数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">saved &lt;seconds&gt; &lt;changes&gt;</span><br></pre></td></tr></table></figure>
+
+<p>设置多少秒之后又changes更改，就是持久化操作，将key-value写到硬盘上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbfilename dump.rdb</span><br></pre></td></tr></table></figure>
+
+<p>指定本地数据库名称，它所在的目录是下面这条配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir /var/lib/redis</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass foobared</span><br></pre></td></tr></table></figure>
+
+<p>设置redis的密码，默认是关闭的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxclients 10000</span><br></pre></td></tr></table></figure>
+
+<p>同一时间的最大客户端连接数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory &lt;bytes&gt;</span><br></pre></td></tr></table></figure>
+
+<p>redis的最大缓存，设置的值不要超过服务器的内存的最大值，比如说，1g的服务器，不能设置超过1g的redis最大内存。redis启动时，会把数据加载到内存中去，达到最大内存之后，redis会先尝试清除已经到期的key-value，但是当这个方法也已经处理过之后仍然达到了最大内存设置，将无法进行写操作，但是可以进行读操作。redis新的vm机制，会把key放入内存，value放入swap区。</p>
+<p>如果redis一直增加数据，就会让redis的内存溢出，导致redis宕机，所以有两种解决方案：</p>
+<ol>
+<li><p>为数据设置一个合理的过期时间</p>
+</li>
+<li><p>采用lru(最近最少使用)淘汰策略进行页面置换</p>
+<p><img src="https://i.loli.net/2020/02/14/J4u2BIoRgOG7Upd.png" alt="redis_strategy.png"></p>
+</li>
+</ol>
+<p>依次从上到下说说每个算法的作用：</p>
+<p>​    1.设定的超时时间数据中，删除最不常用的数据</p>
+<p>​    2.查询所有的key中最近最不常用的数据，进行删除</p>
+<p>​    5.随机在超时时间的数据删除</p>
+<p>​    6.查询全部设定超时时间的数据并进行排序，将马上就过期的数据删除</p>
+<p>​    7.溢出的话，报错返回，默认使用这个策略</p>
+<h1 id="redis的一些命令"><a href="#redis的一些命令" class="headerlink" title="redis的一些命令"></a>redis的一些命令</h1><h2 id="redis登陆命令"><a href="#redis登陆命令" class="headerlink" title="redis登陆命令"></a>redis登陆命令</h2><p>redis-cli [-h host -p port -a password]，如果是默认的没改地址、没改端口号、没设置密码，那么就是正常的redis-cli启动客户端直接连接redis-server。</p>
+<h2 id="redis的关闭命令"><a href="#redis的关闭命令" class="headerlink" title="redis的关闭命令"></a>redis的关闭命令</h2><ol>
+<li>使用linux的kill 的9号信号杀死redis进程，容易造成数据丢失</li>
+<li>使用shutdown关闭</li>
+</ol>
+<h2 id="redis的查询命令"><a href="#redis的查询命令" class="headerlink" title="redis的查询命令"></a>redis的查询命令</h2><h2 id="教程网址"><a href="#教程网址" class="headerlink" title="教程网址"></a>教程网址</h2><p><a href="https://www.redis.net.cn/tutorial/3501.html" target="_blank" rel="noopener">https://www.redis.net.cn/tutorial/3501.html</a></p>
+<h3 id="keys命令"><a href="#keys命令" class="headerlink" title="keys命令"></a>keys命令</h3><p><img src="https://i.loli.net/2020/02/15/69uOBsJXviPcg2k.png" alt="redis_instructions_list.png"></p>
+<h3 id="string命令"><a href="#string命令" class="headerlink" title="string命令"></a>string命令</h3><p>string是redis的最最基本的数据类型，一个key对应一个value。</p>
+<p>并且其是二进制安全的，因为在redis存储的string是可序列化的，而序列化之后，都是用二进制表示的数据，编码不会被篡改，所以是二进制安全的，可以包含任何的数据，如jpg图片或者是序列化对象(java中实现serializable接口的对象，其他语言不清楚)。</p>
+<p>一个key能存储最大512mb的数据，但是建议不超过1024个字节即1kb。</p>
+<p>关于下面的指令有几点补充的地方：</p>
+<p>1.getrange key start end 是全闭区，左右两端都能取的。</p>
+<p>2.incr key 如果在没有key的情况下，会创建这个key，并且初始化为0 。</p>
+<p>3.setnx key value,分布式锁的命令，面试可能会问。</p>
+<p>4.string常存储json数据</p>
+<p><img src="https://i.loli.net/2020/02/15/Dm5jgQlpOZudVSk.png" alt="redis_string_instructions.png"></p>
+<h3 id="hash命令："><a href="#hash命令：" class="headerlink" title="hash命令："></a>hash命令：</h3><p>哈希就是将多对，field-value存储在key中，查询可以根据key查询，这样查出来的就是多个field-value。也可以根据key field查询，这样查出来的就是对应field的value。</p>
+<p>下面的指令说两句补充的：</p>
+<p>1.hmset key field.. value..，这个必须redis中没有这个key，不然会报错。</p>
+<p>2.hash常存储一个对象</p>
+<p><img src="https://i.loli.net/2020/02/15/hiO436mfsUc2YWL.png" alt="redis_hash_instrcutions.png"></p>
+<p>1.查询所有的key：keys *，也可以查询某个特定的key，也可以根据key模糊查询，比如</p>
+<p>​    <img src="https://i.loli.net/2020/02/15/AMIVWPX3rpKfaid.png" alt="redis_key_select.png"></p>
+<p>现在有两个key:<code>test_key</code>和<code>test_key1</code>，可以通过这种模糊查询来查询key值</p>
+<p>2.查询对应key的value：get &lt;key-name&gt;，此 命令用于获取指定 key 的值。如果 key 不存在，返回 nil 。如果key 储存的值不是字符串类型，返回一个错误。查询的时候，<strong>key区分大小写</strong>。</p>
+<p>3.删除key：del key1 key2 key3…，可以删除一个key也可以删除多个key，但是不能使用模糊删除。如果删除成功就会返回删除了几个key。要删除所有的key是：flushall</p>
+<p><img src="https://i.loli.net/2020/02/15/QrlX9N8Gm5DeywR.png" alt="redis_del_key_vague.png"></p>
+<p>4.序列化给定的key，并且返回序列化的值：dump key，但是源key是不变的。</p>
+<p>5.判断key是否存在：exists key… ，存在返回存在key的数量，不存在返回0</p>
+<p>6.给key设置过期时间：expire key seconds</p>
+<p>7.查看还有多长时间存活：ttl key，如果返回的是-1代表永久存活，-2代表无效的key</p>
+<p><img src="https://i.loli.net/2020/02/15/T5WpzrIhOePyNt1.png" alt="redis_expire_key_10seconds.png"></p>
+<h1 id="key的命名规范"><a href="#key的命名规范" class="headerlink" title="key的命名规范"></a>key的命名规范</h1><p>redis单个key可以存入512m大小</p>
+<ol>
+<li><p>key不要太长，不要超过1024个字节；也不要太短，影响可读性。</p>
+</li>
+<li><p>因为nosql是数据与数据之间没有任何关联的，所以只有通过命名来产生关联关系，举个小例子</p>
+<p>现在有两个key，表示的都是用户名，可是如果都是user_name的话，会导致之前的user_name的value被后面的user_name的value取代掉。如果是在mysql数据库中，那么我们通常会加一个<code>id</code>字段来表示不同的用户，所以在这里，最好使用user_id_name，这种形式的key来存储。就是<code>user_1_name</code> 的<code>value</code>表示<code>xu</code>，<code>user_2_name</code>的<code>value</code>表示<code>kyrie</code>，这样就区分了两个user_name的区别。可是由于一些<code>sql</code>数据库中表的字段的名称，可能带有下划线，所以这里是命名方式是：<code>user:id:name</code></p>
+</li>
+</ol>
+<h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>就是缓存和数据库中都没有数据，而用户不断的发起请求，会导致数据库压力增大，甚至导致宕机。比如用户不断查询id=-1的值。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><ol>
+<li>接口层增加校验，如用户鉴权校验，id做基础校验，id&lt;=0的直接拦截；</li>
+<li>从缓存取不到的数据，在数据库中也没有取到，这时也可以将key-value对写为key-null，缓存有效时间可以设置短点，如30秒（设置太长会导致正常情况也没法使用）。这样可以防止攻击用户反复用同一个id暴力攻击</li>
+</ol>
+<h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><h2 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h2><p>缓存雪崩就是，当redis的key大面积过期的时候，数据库的压力倍增。举个不会发生的例子：当双十一来临的时候，设置首页商品过期时间是1个小时，当人们抢购完成之后，此时的用户量还是很大，缓存过期了，只有从数据库中查询数据库，这么大的访问量，数据库承受的压力过大，甚至导致宕机。</p>
+<h2 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h2><ol>
+<li>缓存数据的过期时间设置随机，防止同一时间大量数据过期现象发生。</li>
+<li>如果缓存数据库是分布式部署，将热点数据均匀分布在不同的缓存数据库中。</li>
+<li>设置热点数据永远不过期。</li>
+</ol>
+<h2 id="和缓存击穿的区别"><a href="#和缓存击穿的区别" class="headerlink" title="和缓存击穿的区别"></a>和缓存击穿的区别</h2><p>缓存雪崩是大量的缓存数据过期，而缓存击穿是一条数据正在被高并发的使用，从而导致数据库宕机。</p>
+<h1 id="Jedis怎么操作redis"><a href="#Jedis怎么操作redis" class="headerlink" title="Jedis怎么操作redis"></a>Jedis怎么操作redis</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">InputStream stream = <span class="keyword">this</span>.getClass().getClassLoader().getResourceAsStream(<span class="string">"jedis.properties"</span>);</span><br><span class="line">        <span class="keyword">assert</span> stream != <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">//        处理流，加快文件读写速度</span></span><br><span class="line">        BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(stream);</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.load(in);</span><br><span class="line">        String host = properties.getProperty(<span class="string">"jedis.host"</span>);</span><br><span class="line">        String portStr = properties.getProperty(<span class="string">"jedis.port"</span>);</span><br><span class="line">        <span class="keyword">int</span> port = Integer.parseInt(portStr);</span><br><span class="line"><span class="comment">//        1. 获取连接</span></span><br><span class="line">        Jedis jedis=<span class="keyword">new</span> Jedis(host,port);</span><br><span class="line"><span class="comment">//        2. 设置密码，如果redis不设置密码的话，不能连接redis</span></span><br><span class="line">        jedis.auth(<span class="string">"123"</span>);</span><br><span class="line"><span class="comment">//        3. 检测是否连接成功，如果连接成功则继续</span></span><br><span class="line">        String res = jedis.ping();</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">"PONG"</span>.equals(res))&#123;</span><br><span class="line">            jedis.setnx(<span class="string">"jedis:key"</span>,<span class="string">"jedis:value"</span>);</span><br><span class="line">            jedis.close();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在redis查询对应的记录：</p>
+<p><img src="https://i.loli.net/2020/02/15/N1WFYw9eC2dmvRj.png" alt="redis_jedis_test.png"></p>
+<h1 id="Redis持久化原理"><a href="#Redis持久化原理" class="headerlink" title="Redis持久化原理"></a>Redis持久化原理</h1><p>Redis 分别提供了 RDB 和 AOF 两种持久化机制：</p>
+<ul>
+<li>RDB 将数据库的快照（snapshot）以二进制的方式保存到磁盘中。</li>
+<li>AOF 则以协议文本的方式，将所有对数据库进行过写入的命令（及其参数）记录到 AOF 文件，以此达到记录数据库状态的目的。</li>
+</ul>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>Redis 将所有对数据库进行过<strong>写入的命令（及其参数）</strong>记录到 <strong>AOF 文件</strong>， 以此达到记录数据库状态的目的。</p>
+<p>如果有对redis进行<strong>修改的</strong>指令的话，那么这几条指令就会被记录在aof文件中。为了处理的方便， AOF 文件使用<strong>网络通讯协议</strong>的格式来保存这些命令。</p>
+<p>同步命令到 AOF 文件的整个过程可以分为三个阶段：</p>
+<ol>
+<li><strong>命令传播</strong>：Redis 将执行完的命令、命令的参数、命令的参数个数等信息发送到 AOF 程序中。redis服务器会根据redis客户端的请求的协议文本来调用不同的函数，将参数转换成字符串对象。</li>
+<li><strong>缓存追加</strong>：AOF 程序根据接收到的命令数据，将命令转换为网络通讯协议的格式，然后将协议内容追加到服务器的 AOF 缓存中。</li>
+<li><strong>文件写入和保存</strong>：AOF 缓存中的内容被写入到 AOF 文件末尾，如果设定的 AOF 保存条件被满足的话， fsync 函数或者 fdatasync 函数会被调用，将写入的内容真正地保存到磁盘中。</li>
+</ol>
+<h3 id="命令传播"><a href="#命令传播" class="headerlink" title="命令传播"></a>命令传播</h3><p>就是当一个 redis客户端要执行命令的时候，客户端就会通过网络连接，将协议文本传输给redis服务器，服务器在接收到客户端请求的时候，会根据不同的协议文本调用不同的命令函数，并且将各个参数从字符串文本转换成字符串对象。</p>
+<p>比如说， 要执行命令 <code>SET KEY VALUE</code> ， 客户端将向服务器发送文本 <code>&quot;*3\r\n$3\r\nSET\r\n$3\r\nKEY\r\n$5\r\nVALUE\r\n&quot;</code> 。</p>
+<p>针对上面的 <code>SET</code>命令例子， Redis 将客户端的命令指针指向实现 <code>SET</code>命令的 <code>setCommand</code> 函数， 并创建三个 Redis 字符串对象， 分别保存 <code>SET</code> 、 <code>KEY</code> 和 <code>VALUE</code> 三个参数（命令也算作参数）。</p>
+<p><img src="https://redisbook.readthedocs.io/en/latest/_images/graphviz-a5c804211267a10a5c3ffa47c5b600727191a3be.svg" alt="Aof"></p>
+<h3 id="缓存追加"><a href="#缓存追加" class="headerlink" title="缓存追加"></a>缓存追加</h3><ol>
+<li>接受命令、命令的参数、以及参数的个数、所使用的数据库等信息。</li>
+<li>将命令还原成 Redis 网络通讯协议。</li>
+<li>将协议文本追加到 <code>aof_buf</code> 末尾。</li>
+</ol>
+<h3 id="文件写入和保存"><a href="#文件写入和保存" class="headerlink" title="文件写入和保存"></a>文件写入和保存</h3><p>每当服务器常规任务函数被执行、 或者事件处理器被执行时， aof.c/flushAppendOnlyFile 函数都会被调用， 这个函数执行以下两个工作：</p>
+<p>WRITE：根据条件，将 aof_buf 中的缓存写入到 AOF 文件。</p>
+<p>SAVE：根据条件，调用 fsync 或 fdatasync 函数，将 AOF 文件保存到磁盘中。</p>
+<h4 id="AOF的保存模式"><a href="#AOF的保存模式" class="headerlink" title="AOF的保存模式"></a>AOF的保存模式</h4><p>Redis 目前支持三种 AOF 保存模式，它们分别是：</p>
+<ol>
+<li><code>AOF_FSYNC_NO</code> ：不保存。</li>
+<li><code>AOF_FSYNC_EVERYSEC</code> ：每一秒钟保存一次。</li>
+<li><code>AOF_FSYNC_ALWAYS</code> ：每执行一个命令保存一次。</li>
+</ol>
+<h5 id="1-不保存"><a href="#1-不保存" class="headerlink" title="1. 不保存"></a>1. 不保存</h5><p>在这种模式下， 每次调用 flushAppendOnlyFile 函数， WRITE 都会被执行， 但 SAVE 会被略过。</p>
+<p>在这种模式下， SAVE 只会在以下任意一种情况中被执行：</p>
+<ol>
+<li>Redis 被关闭</li>
+<li>AOF 功能被关闭</li>
+<li>系统的写缓存被刷新（可能是缓存已经被写满，或者定期保存操作被执行</li>
+</ol>
+<p>这三种情况下的 SAVE 操作都会引起 Redis <strong>主进程阻塞</strong>。</p>
+<h5 id="2-每一秒钟保存一次"><a href="#2-每一秒钟保存一次" class="headerlink" title="2.每一秒钟保存一次"></a>2.每一秒钟保存一次</h5><p>在这种模式中， SAVE 原则上每隔一秒钟就会执行一次， 因为 SAVE 操作是由后台子线程调用的， 所以它<strong>不会引起服务器主进程阻塞</strong>。</p>
+<p><img src="https://redisbook.readthedocs.io/en/latest/_images/graphviz-1b226a6d0f09ed1b61a30d899372834634b96504.svg" alt="每一秒保存一次"></p>
+<h5 id="3-每一条命令保存一次"><a href="#3-每一条命令保存一次" class="headerlink" title="3.每一条命令保存一次"></a>3.每一条命令保存一次</h5><p>每次执行完一个命令之后，write和save都会被执行一次，此时redis主进程是会被堵塞的</p>
+<h1 id="redis的一些坑的总结"><a href="#redis的一些坑的总结" class="headerlink" title="redis的一些坑的总结"></a>redis的一些坑的总结</h1><p>1.使用<code>Jedis</code>连接redis的时候，必须设置redis的密码，否则会和我一样浪费很长时间来找错:slightly_smiling_face: 而且也不用通过<code>ssh</code>通道的方式来连接redis，不过我有点好奇，那些<code>redis</code>的管理工具是怎么实现ssh方式连接redis，还能够不用密码的。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/20/spring-ioc的理解/" rel="next" title="spring ioc的理解">
+                <i class="fa fa-chevron-left"></i> spring ioc的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NTAyNi8yMTU0NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/SecretBoxOfKyrieXu.png" alt="KyrieXu">
+            
+              <p class="site-author-name" itemprop="name">KyrieXu</p>
+              <div class="site-description motion-element" itemprop="description">记录生活点滴以及遇到的问题</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件解析"><span class="nav-number">1.</span> <span class="nav-text">配置文件解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis的一些命令"><span class="nav-number">2.</span> <span class="nav-text">redis的一些命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis登陆命令"><span class="nav-number">2.1.</span> <span class="nav-text">redis登陆命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis的关闭命令"><span class="nav-number">2.2.</span> <span class="nav-text">redis的关闭命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis的查询命令"><span class="nav-number">2.3.</span> <span class="nav-text">redis的查询命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#教程网址"><span class="nav-number">2.4.</span> <span class="nav-text">教程网址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#keys命令"><span class="nav-number">2.4.1.</span> <span class="nav-text">keys命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#string命令"><span class="nav-number">2.4.2.</span> <span class="nav-text">string命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash命令："><span class="nav-number">2.4.3.</span> <span class="nav-text">hash命令：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#key的命名规范"><span class="nav-number">3.</span> <span class="nav-text">key的命名规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存穿透"><span class="nav-number">4.</span> <span class="nav-text">缓存穿透</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">4.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">4.2.</span> <span class="nav-text">解决方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">5.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念-1"><span class="nav-number">5.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法-1"><span class="nav-number">5.2.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#和缓存击穿的区别"><span class="nav-number">5.3.</span> <span class="nav-text">和缓存击穿的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jedis怎么操作redis"><span class="nav-number">6.</span> <span class="nav-text">Jedis怎么操作redis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis持久化原理"><span class="nav-number">7.</span> <span class="nav-text">Redis持久化原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF"><span class="nav-number">7.1.</span> <span class="nav-text">AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令传播"><span class="nav-number">7.1.1.</span> <span class="nav-text">命令传播</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存追加"><span class="nav-number">7.1.2.</span> <span class="nav-text">缓存追加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件写入和保存"><span class="nav-number">7.1.3.</span> <span class="nav-text">文件写入和保存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF的保存模式"><span class="nav-number">7.1.3.1.</span> <span class="nav-text">AOF的保存模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-不保存"><span class="nav-number">7.1.3.1.1.</span> <span class="nav-text">1. 不保存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-每一秒钟保存一次"><span class="nav-number">7.1.3.1.2.</span> <span class="nav-text">2.每一秒钟保存一次</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-每一条命令保存一次"><span class="nav-number">7.1.3.1.3.</span> <span class="nav-text">3.每一条命令保存一次</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis的一些坑的总结"><span class="nav-number">8.</span> <span class="nav-text">redis的一些坑的总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KyrieXu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+    <span title="站点总字数">43k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    
+    <span title="站点阅读时长">1:12</span>
+  
+</div>
+
+
+
+
+
+
+
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+  <span title="post.totalcount">
+     字 </span>
+    <!--<span title="站点总字数">43k</span>-->
+  
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color="0,154,214" opacity="1" zindex="-1" count="150" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: '2020/03/03/redis-学习笔记/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas> 
+   <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+   <script type="text/javascript" src="/js/fireworks.js"></script>
+   
+
+</body>
+</html>
