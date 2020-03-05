@@ -94,22 +94,25 @@
 
 
 
-  <meta name="description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
-<meta name="keywords" content="PAT">
+  <meta name="description" content="Mysql有哪些索引结构hash 和 b+  为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树为什么需要索引mysql底层使用的时B+树，mysql索引是放在磁盘上面的，因此每次读取索引时通过IO从磁盘读取。引入索引的目的就是为了减少IO次数，避免慢查询。 hash字段值所对应的数组的下标是通过hash算法算出来的，所以，hash表能解决等值查询，如果是范围查询">
+<meta name="keywords" content="数据库">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PAT-B 1072 开学寄语">
-<meta property="og:url" content="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/index.html">
+<meta property="og:title" content="Mysql的索引">
+<meta property="og:url" content="https://KyrieXu11.github.io/2020/03/03/mysql的一些原理/index.html">
 <meta property="og:site_name" content="Secret Box of Xu">
-<meta property="og:description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
+<meta property="og:description" content="Mysql有哪些索引结构hash 和 b+  为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树为什么需要索引mysql底层使用的时B+树，mysql索引是放在磁盘上面的，因此每次读取索引时通过IO从磁盘读取。引入索引的目的就是为了减少IO次数，避免慢查询。 hash字段值所对应的数组的下标是通过hash算法算出来的，所以，hash表能解决等值查询，如果是范围查询">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG">
-<meta property="og:image" content="https://i.loli.net/2019/07/24/5d3858d45346913654.png">
-<meta property="og:image" content="https://i.loli.net/2019/07/24/5d385be194f5195746.png">
-<meta property="og:updated_time" content="2019-07-24T13:26:43.261Z">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/qrcMYCO2Hik6vjE.gif">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/DozpefEA51Y2XJW.gif">
+<meta property="og:image" content="https://i.loli.net/2020/03/05/eaFYSTJ9E4RnOjC.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/05/lRnwLedDc3zfG5s.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/05/svxACrDLTWenERJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/05/dop25tuPSeRLvlK.png">
+<meta property="og:updated_time" content="2020-03-05T02:22:23.870Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PAT-B 1072 开学寄语">
-<meta name="twitter:description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
-<meta name="twitter:image" content="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG">
+<meta name="twitter:title" content="Mysql的索引">
+<meta name="twitter:description" content="Mysql有哪些索引结构hash 和 b+  为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树为什么需要索引mysql底层使用的时B+树，mysql索引是放在磁盘上面的，因此每次读取索引时通过IO从磁盘读取。引入索引的目的就是为了减少IO次数，避免慢查询。 hash字段值所对应的数组的下标是通过hash算法算出来的，所以，hash表能解决等值查询，如果是范围查询">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/04/qrcMYCO2Hik6vjE.gif">
 
 
 
@@ -117,7 +120,7 @@
 
   
   
-  <link rel="canonical" href="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/">
+  <link rel="canonical" href="https://KyrieXu11.github.io/2020/03/03/mysql的一些原理/">
 
 
 
@@ -127,7 +130,7 @@
   };
 </script>
 
-  <title>PAT-B 1072 开学寄语 | Secret Box of Xu</title>
+  <title>Mysql的索引 | Secret Box of Xu</title>
   
 
 
@@ -381,7 +384,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/">
+    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2020/03/03/mysql的一些原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KyrieXu">
@@ -398,7 +401,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PAT-B 1072 开学寄语
+          <h1 class="post-title" itemprop="name headline">Mysql的索引
 
               
             
@@ -424,13 +427,23 @@
                 
               
 
-              <time title="创建时间：2019-07-24 21:04:25 / 修改时间：21:26:43" itemprop="dateCreated datePublished" datetime="2019-07-24T21:04:25+08:00">2019-07-24</time>
+              <time title="创建时间：2020-03-03 20:45:09" itemprop="dateCreated datePublished" datetime="2020-03-03T20:45:09+08:00">2020-03-03</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-03-05 10:22:23" itemprop="dateModified" datetime="2020-03-05T10:22:23+08:00">2020-03-05</time>
+              </span>
             
           
 
@@ -470,7 +483,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.1k</span>
+              <span title="本文字数">1.8k</span>
             </span>
           
 
@@ -482,7 +495,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">4 分钟</span>
+              <span title="阅读时长">3 分钟</span>
             </span>
           
 
@@ -501,18 +514,36 @@
       
 
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！<br><img src="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG" alt><br>本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。</p>
-<h2 id="输入格式："><a href="#输入格式：" class="headerlink" title="输入格式："></a>输入格式：</h2><p>输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的物品种类数。第二行给出 M 个需要被查缴的物品编号，其中编号为 4 位数字。随后 N 行，每行给出一位学生的姓名缩写（由 1-4 个大写英文字母组成）、个人物品数量 K（0 ≤ K ≤ 10）、以及 K 个物品的编号。</p>
-<h2 id="输出格式："><a href="#输出格式：" class="headerlink" title="输出格式："></a>输出格式：</h2><p>顺次检查每个学生携带的物品，如果有需要被查缴的物品存在，则按以下格式输出该生的信息和其需要被查缴的物品的信息（注意行末不得有多余空格）：<br><code>姓名缩写: 物品编号1 物品编号2 ……</code><br>最后一行输出存在问题的学生的总人数和被查缴物品的总数。</p>
-<h2 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">4 2</span><br><span class="line">2333 6666</span><br><span class="line">CYLL 3 1234 2345 3456</span><br><span class="line">U 4 9966 6666 8888 6666</span><br><span class="line">GG 2 2333 7777</span><br><span class="line">JJ 3 0012 6666 2333</span><br></pre></td></tr></table></figure>
+        <h1 id="Mysql有哪些索引结构"><a href="#Mysql有哪些索引结构" class="headerlink" title="Mysql有哪些索引结构"></a>Mysql有哪些索引结构</h1><p>hash 和 b+ </p>
+<h1 id="为什么hash表、二叉树、AVL树、b-、b-都可以优化查询，mysql选择了b-树"><a href="#为什么hash表、二叉树、AVL树、b-、b-都可以优化查询，mysql选择了b-树" class="headerlink" title="为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树"></a>为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树</h1><h2 id="为什么需要索引"><a href="#为什么需要索引" class="headerlink" title="为什么需要索引"></a>为什么需要索引</h2><p>mysql底层使用的时B+树，mysql索引是放在磁盘上面的，因此每次读取索引时通过IO从磁盘读取。引入索引的目的就是为了减少IO次数，避免慢查询。</p>
+<h2 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h2><p>字段值所对应的数组的下标是通过hash算法算出来的，所以，hash表能解决等值查询，如果是范围查询的话，那么就不行了。</p>
+<p><img src="https://i.loli.net/2020/03/04/qrcMYCO2Hik6vjE.gif" alt="hash_gif_01.gif"></p>
+<p>通过hash算法，讲字符串转换成对应的数组下标，如果有重复的hash值，就和链表一样，在对应的下标插入一个节点。</p>
+<p>所以hash的最理想的使用场景就是等值查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">123</span>;</span><br></pre></td></tr></table></figure>
 
-<h2 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">U: 6666 6666</span><br><span class="line">GG: 2333</span><br><span class="line">JJ: 6666 2333</span><br><span class="line">3 5</span><br></pre></td></tr></table></figure>
+<p>这样的查询走hash索引结构的话，查询会加快。但是如果是范围查询如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> <span class="keyword">id</span> &gt; <span class="number">123</span>;</span><br></pre></td></tr></table></figure>
 
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">inf</span>&#123;</span></span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line">	<span class="keyword">int</span> count;</span><br><span class="line">	<span class="keyword">int</span> num[<span class="number">10</span>];</span><br><span class="line">&#125; student[<span class="number">1000</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> n,m;</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">	<span class="keyword">int</span> num,sum=<span class="number">0</span>,cnt=<span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v,a[n];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;num;</span><br><span class="line">		v.push_back(num);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;student[i].name&gt;&gt;student[i].count;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;student[i].count;j++)&#123;</span><br><span class="line">			<span class="built_in">cin</span>&gt;&gt;student[i].num[j];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;v.size();k++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(v[k]==student[i].num[j])&#123;</span><br><span class="line">					a[i].push_back(v[k]);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[i].size()!=<span class="number">0</span>)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;student[i].name&lt;&lt;<span class="string">": "</span>;</span><br><span class="line">			cnt++;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">continue</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;a[i].size();j++)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;setfill(<span class="string">'0'</span>)&lt;&lt;setw(<span class="number">4</span>)&lt;&lt;a[i][j];</span><br><span class="line">			<span class="keyword">if</span>(j!=a[i].size()<span class="number">-1</span>) <span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		sum+=a[i].size();</span><br><span class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span>&lt;&lt;cnt&lt;&lt;<span class="string">" "</span>&lt;&lt;sum;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="通过截图"><a href="#通过截图" class="headerlink" title="通过截图"></a>通过截图</h2><p><strong>是的，这次没有一遍通过</strong>，所以才会有后面的问题总结。<br><img src="https://i.loli.net/2019/07/24/5d3858d45346913654.png" alt="7.24.1.png"></p>
-<h2 id="问题总结以及思路"><a href="#问题总结以及思路" class="headerlink" title="问题总结以及思路"></a>问题总结以及思路</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>先说说思路吧，思路大概如下：<br>1.首先我想着用一个结构体，成员是<code>学生名字缩写</code>(string类型的)、<code>学生携带的物品数量</code>、<code>物品编号</code>。<br>2.用<code>vector</code>类型的变量装下待查物品编号，再用<code>vector</code>类型的数组装下对应的每个人出问题的物品的编号，方便后面输出。<br>3.输出格式可以用<code>iomanip</code>头文件中的<code>setw()</code>来控制输出整数的位数，再用<code>setfill(&#39;0&#39;)</code>来用0填充不足位数的位。</p>
-<h3 id="问题总结"><a href="#问题总结" class="headerlink" title="问题总结"></a>问题总结</h3><p>说实话这道题我提交了三遍<br>第一遍提示的格式错误，这个主要原因在于我的行尾有空格<br>第二遍第三个点没通过，主要是我想到了待查物品的编号第一位是0，但是我只用了<code>setw()</code>来控制输出的位数，没有想到它不自动填充0。<br>第三遍，在输出的时候<code>setw(4)</code>前面加一个<code>setfill(&#39;0&#39;)</code>过了。<br>那为啥不直接用printf(“%04d”,&amp;xxx);呢？因为我代码中<br><img src="https://i.loli.net/2019/07/24/5d385be194f5195746.png" alt="7.24.2.png"><br>这里要输出的是一个<code>vector</code>变量，用printf输出不了(我试过的，不知道有没有错)<br>主要还是考虑不周全，对<code>iomanip</code>这个头文件中的函数不熟悉吧，因为不是很经常用，以后还得多接触…</p>
+<p>hash索引就会显得无能为力了。</p>
+<h2 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h2><p><img src="https://i.loli.net/2020/03/04/DozpefEA51Y2XJW.gif" alt="bst_gif_01.gif"></p>
+<p>解决hash索引不能排序问题，但是当数据有序时会出现线性排列，树的深度会变得很深，会消耗大量IO。</p>
+<h2 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h2><p>下面这个是一颗普通的二叉查找树，可以看出来，这样的树，树高很高，而树高的后果，上面也说了，是会导致IO次数增多。</p>
+<p><img src="https://i.loli.net/2020/03/05/eaFYSTJ9E4RnOjC.png" alt="bst.png"></p>
+<p>而Avl树就比普通的二叉查找树的树高要低，可以看一下：</p>
+<p><img src="https://i.loli.net/2020/03/05/lRnwLedDc3zfG5s.png" alt="avlt.png"></p>
+<p>同样的数据，avl树的树高就比上面的普通的二叉查找树要少的多，“矮胖”的树才能减少IO次数，那么为什么Avl树也不行呢？上面的avl树，在数据量少的时候，看起来还挺好的，但是在数据库里面吧，数据量很大的情况下，树高还是会非常高，而且不仅仅是这个原因，Avl树每个节点只保存了一个<strong>关键字</strong>的长度(如i<strong>nt类型 4byte</strong>)，而在从磁盘读取数据的时候以<strong>一页(4kb</strong>)为单位来进行读取的，所以白白的浪费了4kb-4b=<strong>4092b</strong>的空间。</p>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h2><p>解决平衡二叉树树深度的问题，解决了平衡二叉树读取消耗大量内存空间的问题。</p>
+<p>因为B-树每个节点可以存放多个关键字，最大限度的利用了从磁盘读取的内存空间，单节点存放多个关键字同时也大大减少了树的深度。极大的提高了mysql的查询性能。下面就是一个b-树，同样的数据，b-树比上面的avl树的树高还要低。就是因为一<strong>个节点可以存储多个数据</strong>，从而少了一些磁盘IO的浪费</p>
+<p><img src="https://i.loli.net/2020/03/05/svxACrDLTWenERJ.png" alt="bt.png"></p>
+<p>B-树还有一个特点，那就是为了解决上面的IO浪费的问题，每次新建节点时，<strong>直接申请一个页的空间</strong>，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个node<strong>只需一次I/O</strong>。</p>
+<p>但是B-树还是有缺点，B-树对有范围查找的查询（如age&gt;20）时采用的还是中序排序法，因此也需要多遍历，并且查询性能不稳定，比如查询（select * from table where id = 222 和 select * from table where id = 223）时在查询效率（耗时）上可能会存在一定的差别，因为B-树还是将关键字，这里为id，存放在根节点和叶节点的，如果运气好，可能id=222这个关键字就在第一个节点，消耗一次IO就找到了，而id=223可能在叶节点，需要消耗3次IO才能找到。因此B-树对同一条sql语句的查询性能可能会有很大影响。</p>
+<p>总结一下：b-树对同一条sql语句的查询的影响会有很大的不同</p>
+<h2 id="B-树-1"><a href="#B-树-1" class="headerlink" title="B+树"></a>B+树</h2><p>B+树：将关键字全部存放在叶子节点(查询更稳定，同一条mysql语句执行效率时相同的，都会消耗3次IO)，将相邻叶子节点的地址保存起来（相比于B-树，对于mysql的范围查找不用再使用中序查找，而是可以直接快读获取到。）下面就是一个b+树，之后叶子节点保存数据，其他的节点都是索引，而且B+树的IO次数稳定是很稳定的。</p>
+<p>B-树/B+树 的特点就是每层节点数目非常多，层数很少，目的就是为了就少磁盘IO次数。</p>
+<p>但是B-树的每个节点都有data域（指针），这无疑增大了节点大小，增加了磁盘IO次数，磁盘IO一次读出的数据量大小是固定的，单个数据变大，每次读出的就少，IO次数增多，一次IO多耗时。</p>
+<p><img src="https://i.loli.net/2020/03/05/dop25tuPSeRLvlK.png" alt="bplus.png"></p>
+<p>总结：mysql最终使用B+树为mysql索引的底层实现，mysql维护索引有很大的消耗的，会极大的影响数据库的增、改、删操作，因此建立有用的索引很重要，索引字段所占字节越少，mysql一次读取的关键字也会也多，消耗IO会更少、命中率会更大，查询效率随之也会更高。</p>
 
       
     </div>
@@ -539,7 +570,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/PAT/" rel="tag"><i class="fa fa-tag"></i> PAT</a>
+            <a href="/tags/数据库/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
           
         </div>
       
@@ -552,8 +583,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/14/c-中string类型和数字类型转换/" rel="next" title="c++中string类型和数字类型转换">
-                <i class="fa fa-chevron-left"></i> c++中string类型和数字类型转换
+              <a href="/2020/03/03/redis-学习笔记/" rel="next" title="redis 学习笔记">
+                <i class="fa fa-chevron-left"></i> redis 学习笔记
               </a>
             
           </div>
@@ -562,8 +593,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/07/31/PAT-B-1044-火星数字/" rel="prev" title="PAT-B 1044 火星数字">
-                PAT-B 1044 火星数字 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/03/树的相关知识复习/" rel="prev" title="树的相关知识复习">
+                树的相关知识复习 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -750,7 +781,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入格式："><span class="nav-number">1.1.</span> <span class="nav-text">输入格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出格式："><span class="nav-number">1.2.</span> <span class="nav-text">输出格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入样例："><span class="nav-number">1.3.</span> <span class="nav-text">输入样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出样例："><span class="nav-number">1.4.</span> <span class="nav-text">输出样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过截图"><span class="nav-number">1.6.</span> <span class="nav-text">通过截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题总结以及思路"><span class="nav-number">1.7.</span> <span class="nav-text">问题总结以及思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">1.7.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题总结"><span class="nav-number">1.7.2.</span> <span class="nav-text">问题总结</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql有哪些索引结构"><span class="nav-number">1.</span> <span class="nav-text">Mysql有哪些索引结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么hash表、二叉树、AVL树、b-、b-都可以优化查询，mysql选择了b-树"><span class="nav-number">2.</span> <span class="nav-text">为什么hash表、二叉树、AVL树、b-、b+都可以优化查询，mysql选择了b+树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要索引"><span class="nav-number">2.1.</span> <span class="nav-text">为什么需要索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash"><span class="nav-number">2.2.</span> <span class="nav-text">hash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树"><span class="nav-number">2.3.</span> <span class="nav-text">二叉查找树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVL树"><span class="nav-number">2.4.</span> <span class="nav-text">AVL树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-树"><span class="nav-number">2.5.</span> <span class="nav-text">B-树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-树-1"><span class="nav-number">2.6.</span> <span class="nav-text">B+树</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -945,7 +976,7 @@
 
 <script>
   window.livereOptions = {
-    refer: '2019/07/24/PAT-B-1072-开学寄语/'
+    refer: '2020/03/03/mysql的一些原理/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];

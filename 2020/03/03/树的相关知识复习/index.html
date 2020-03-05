@@ -94,22 +94,25 @@
 
 
 
-  <meta name="description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
-<meta name="keywords" content="PAT">
+  <meta name="description" content="二叉树1.二叉树的定义： 树中每个节点最多有两个儿子节点的树  上面这个就是深度为3的二叉树。 2.二叉树的几个特点： 1. 二叉树的子节点个数=度数为2的节点数+1  2. 深度为k的二叉树最多有$2^k-1$个 节点完全二叉树1.定义：若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。  上面就是一">
+<meta name="keywords" content="数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PAT-B 1072 开学寄语">
-<meta property="og:url" content="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/index.html">
+<meta property="og:title" content="树的相关知识复习">
+<meta property="og:url" content="https://KyrieXu11.github.io/2020/03/03/树的相关知识复习/index.html">
 <meta property="og:site_name" content="Secret Box of Xu">
-<meta property="og:description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
+<meta property="og:description" content="二叉树1.二叉树的定义： 树中每个节点最多有两个儿子节点的树  上面这个就是深度为3的二叉树。 2.二叉树的几个特点： 1. 二叉树的子节点个数=度数为2的节点数+1  2. 深度为k的二叉树最多有$2^k-1$个 节点完全二叉树1.定义：若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。  上面就是一">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG">
-<meta property="og:image" content="https://i.loli.net/2019/07/24/5d3858d45346913654.png">
-<meta property="og:image" content="https://i.loli.net/2019/07/24/5d385be194f5195746.png">
-<meta property="og:updated_time" content="2019-07-24T13:26:43.261Z">
+<meta property="og:image" content="https://i.loli.net/2020/03/03/OFjWrxm8biYDEwV.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/03/eALgfbnQB8x4UH5.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/zylw45YTmori3vh.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/QhHkt9PTEmpAWYC.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/zylw45YTmori3vh.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/04/hLutajd9YcKXMg3.png">
+<meta property="og:updated_time" content="2020-03-04T02:02:23.691Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PAT-B 1072 开学寄语">
-<meta name="twitter:description" content="题目下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。 输入格式：输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的">
-<meta name="twitter:image" content="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG">
+<meta name="twitter:title" content="树的相关知识复习">
+<meta name="twitter:description" content="二叉树1.二叉树的定义： 树中每个节点最多有两个儿子节点的树  上面这个就是深度为3的二叉树。 2.二叉树的几个特点： 1. 二叉树的子节点个数=度数为2的节点数+1  2. 深度为k的二叉树最多有$2^k-1$个 节点完全二叉树1.定义：若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。  上面就是一">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/03/OFjWrxm8biYDEwV.png">
 
 
 
@@ -117,7 +120,7 @@
 
   
   
-  <link rel="canonical" href="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/">
+  <link rel="canonical" href="https://KyrieXu11.github.io/2020/03/03/树的相关知识复习/">
 
 
 
@@ -127,7 +130,7 @@
   };
 </script>
 
-  <title>PAT-B 1072 开学寄语 | Secret Box of Xu</title>
+  <title>树的相关知识复习 | Secret Box of Xu</title>
   
 
 
@@ -381,7 +384,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2019/07/24/PAT-B-1072-开学寄语/">
+    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2020/03/03/树的相关知识复习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KyrieXu">
@@ -398,7 +401,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PAT-B 1072 开学寄语
+          <h1 class="post-title" itemprop="name headline">树的相关知识复习
 
               
             
@@ -424,13 +427,23 @@
                 
               
 
-              <time title="创建时间：2019-07-24 21:04:25 / 修改时间：21:26:43" itemprop="dateCreated datePublished" datetime="2019-07-24T21:04:25+08:00">2019-07-24</time>
+              <time title="创建时间：2020-03-03 20:45:09" itemprop="dateCreated datePublished" datetime="2020-03-03T20:45:09+08:00">2020-03-03</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-03-04 10:02:23" itemprop="dateModified" datetime="2020-03-04T10:02:23+08:00">2020-03-04</time>
+              </span>
             
           
 
@@ -470,7 +483,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.1k</span>
+              <span title="本文字数">1.5k</span>
             </span>
           
 
@@ -482,7 +495,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">4 分钟</span>
+              <span title="阅读时长">2 分钟</span>
             </span>
           
 
@@ -501,18 +514,60 @@
       
 
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>下图是上海某校的新学期开学寄语：天将降大任于斯人也，必先删其微博，卸其 QQ，封其电脑，夺其手机，收其 ipad，断其 wifi，使其百无聊赖，然后，净面、理发、整衣，然后思过、读书、锻炼、明智、开悟、精进。而后必成大器也！<br><img src="https://images.ptausercontent.com/3b1d9f4a-778b-4942-a9e2-836262f363aa.JPG" alt><br>本题要求你写个程序帮助这所学校的老师检查所有学生的物品，以助其成大器。</p>
-<h2 id="输入格式："><a href="#输入格式：" class="headerlink" title="输入格式："></a>输入格式：</h2><p>输入第一行给出两个正整数 N（≤ 1000）和 M（≤ 6），分别是学生人数和需要被查缴的物品种类数。第二行给出 M 个需要被查缴的物品编号，其中编号为 4 位数字。随后 N 行，每行给出一位学生的姓名缩写（由 1-4 个大写英文字母组成）、个人物品数量 K（0 ≤ K ≤ 10）、以及 K 个物品的编号。</p>
-<h2 id="输出格式："><a href="#输出格式：" class="headerlink" title="输出格式："></a>输出格式：</h2><p>顺次检查每个学生携带的物品，如果有需要被查缴的物品存在，则按以下格式输出该生的信息和其需要被查缴的物品的信息（注意行末不得有多余空格）：<br><code>姓名缩写: 物品编号1 物品编号2 ……</code><br>最后一行输出存在问题的学生的总人数和被查缴物品的总数。</p>
-<h2 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">4 2</span><br><span class="line">2333 6666</span><br><span class="line">CYLL 3 1234 2345 3456</span><br><span class="line">U 4 9966 6666 8888 6666</span><br><span class="line">GG 2 2333 7777</span><br><span class="line">JJ 3 0012 6666 2333</span><br></pre></td></tr></table></figure>
-
-<h2 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">U: 6666 6666</span><br><span class="line">GG: 2333</span><br><span class="line">JJ: 6666 2333</span><br><span class="line">3 5</span><br></pre></td></tr></table></figure>
-
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">inf</span>&#123;</span></span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line">	<span class="keyword">int</span> count;</span><br><span class="line">	<span class="keyword">int</span> num[<span class="number">10</span>];</span><br><span class="line">&#125; student[<span class="number">1000</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> n,m;</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;n&gt;&gt;m;</span><br><span class="line">	<span class="keyword">int</span> num,sum=<span class="number">0</span>,cnt=<span class="number">0</span>;</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v,a[n];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;num;</span><br><span class="line">		v.push_back(num);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;student[i].name&gt;&gt;student[i].count;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;student[i].count;j++)&#123;</span><br><span class="line">			<span class="built_in">cin</span>&gt;&gt;student[i].num[j];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;v.size();k++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(v[k]==student[i].num[j])&#123;</span><br><span class="line">					a[i].push_back(v[k]);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[i].size()!=<span class="number">0</span>)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;student[i].name&lt;&lt;<span class="string">": "</span>;</span><br><span class="line">			cnt++;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">continue</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;a[i].size();j++)&#123;</span><br><span class="line">			<span class="built_in">cout</span>&lt;&lt;setfill(<span class="string">'0'</span>)&lt;&lt;setw(<span class="number">4</span>)&lt;&lt;a[i][j];</span><br><span class="line">			<span class="keyword">if</span>(j!=a[i].size()<span class="number">-1</span>) <span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		sum+=a[i].size();</span><br><span class="line">		<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span>&lt;&lt;cnt&lt;&lt;<span class="string">" "</span>&lt;&lt;sum;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="通过截图"><a href="#通过截图" class="headerlink" title="通过截图"></a>通过截图</h2><p><strong>是的，这次没有一遍通过</strong>，所以才会有后面的问题总结。<br><img src="https://i.loli.net/2019/07/24/5d3858d45346913654.png" alt="7.24.1.png"></p>
-<h2 id="问题总结以及思路"><a href="#问题总结以及思路" class="headerlink" title="问题总结以及思路"></a>问题总结以及思路</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>先说说思路吧，思路大概如下：<br>1.首先我想着用一个结构体，成员是<code>学生名字缩写</code>(string类型的)、<code>学生携带的物品数量</code>、<code>物品编号</code>。<br>2.用<code>vector</code>类型的变量装下待查物品编号，再用<code>vector</code>类型的数组装下对应的每个人出问题的物品的编号，方便后面输出。<br>3.输出格式可以用<code>iomanip</code>头文件中的<code>setw()</code>来控制输出整数的位数，再用<code>setfill(&#39;0&#39;)</code>来用0填充不足位数的位。</p>
-<h3 id="问题总结"><a href="#问题总结" class="headerlink" title="问题总结"></a>问题总结</h3><p>说实话这道题我提交了三遍<br>第一遍提示的格式错误，这个主要原因在于我的行尾有空格<br>第二遍第三个点没通过，主要是我想到了待查物品的编号第一位是0，但是我只用了<code>setw()</code>来控制输出的位数，没有想到它不自动填充0。<br>第三遍，在输出的时候<code>setw(4)</code>前面加一个<code>setfill(&#39;0&#39;)</code>过了。<br>那为啥不直接用printf(“%04d”,&amp;xxx);呢？因为我代码中<br><img src="https://i.loli.net/2019/07/24/5d385be194f5195746.png" alt="7.24.2.png"><br>这里要输出的是一个<code>vector</code>变量，用printf输出不了(我试过的，不知道有没有错)<br>主要还是考虑不周全，对<code>iomanip</code>这个头文件中的函数不熟悉吧，因为不是很经常用，以后还得多接触…</p>
+        <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><p>1.二叉树的定义： 树中每个节点最多有两个儿子节点的树</p>
+<p><img src="https://i.loli.net/2020/03/03/OFjWrxm8biYDEwV.png" alt="二叉树.png"></p>
+<p>上面这个就是深度为3的二叉树。</p>
+<p>2.二叉树的几个特点：</p>
+<pre><code>1. 二叉树的子节点个数=度数为2的节点数+1
+ 2. 深度为k的二叉树最多有$2^k-1$个 节点</code></pre><h1 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h1><p>1.定义：若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。</p>
+<p><img src="https://i.loli.net/2020/03/03/eALgfbnQB8x4UH5.png" alt="完全二叉树.png"></p>
+<p>上面就是一个完全二叉树</p>
+<p>2.特点：</p>
+<ol>
+<li><p>所有的叶结点都出现在第k层或k-l层（层次最大的两层）</p>
+</li>
+<li><p>对任一结点，如果其右子树的最大层次为L，则其左子树的最大层次为L或L+l。</p>
+</li>
+<li><p>具有n个结点的完全二叉树的深度为$\lfloor log_2n \rfloor$ </p>
+</li>
+<li><p>如果n个节点的完全二叉树用顺序存储的方式存储，那么，对于节点编号为i的节点来说，其父节点的编号必定是$\lfloor \frac i2 \rfloor$ </p>
+</li>
+<li><p>如果2*i&lt;=N，则其左孩子（即左子树的根结点）的编号为2*i；若2*i&gt;N，则无左孩子；</p>
+<p>如果2*i+1&lt;=N，则其右孩子的结点编号为2*i+1；若2*i+1&gt;N，则无右孩子。</p>
+</li>
+</ol>
+<h1 id="二叉查找树-BST"><a href="#二叉查找树-BST" class="headerlink" title="二叉查找树(BST)"></a>二叉查找树(BST)</h1><p>1.定义：满足下面几点性质的二叉树就是二叉查找树</p>
+<ul>
+<li>若任意节点的左子树不空，则<strong>左子树</strong>上所有结点的值均<strong>小于</strong>它的<strong>根结点</strong>的值；</li>
+<li>若任意节点的右子树不空，则<strong>右子树</strong>上所有结点的值均<strong>大于</strong>它的<strong>根结点</strong>的值；</li>
+<li>任意节点的左、右子树也分别为二叉查找树；</li>
+<li>没有键值相等的节点。</li>
+</ul>
+<p>这里有个网站可以动态的展示二叉查找树插入和删除的过程：——————&gt;<a href="https://www.cs.usfca.edu/~galles/visualization/BST.html" target="_blank" rel="noopener">传送门</a></p>
+<p><img src="https://i.loli.net/2020/03/04/zylw45YTmori3vh.png" alt="二叉查找树.png"></p>
+<p>上面的就是二叉查找树，对于每一个节点来说，左边的节点的值大于根节点的值，右边节点的大于根节点的值</p>
+<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>1.定义：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。</p>
+<p>由于普通的二叉查找树会容易失去”平衡“，极端情况下，二叉查找树会退化成线性的链表，导致插入和查找的复杂度下降到 $O(n)$。就比如下面这个二叉查找树：</p>
+<p><img src="https://i.loli.net/2020/03/04/QhHkt9PTEmpAWYC.png" alt="二叉查找树_2.png"></p>
+<p>对于<code>002</code>这个节点来说，左右子树的高度差的绝对值是2&gt;1，所以是二叉查找树不是平衡二叉树。</p>
+<p>这个上面的完全二叉树也是一个平衡二叉树，完全二叉树就是一颗平衡二叉树</p>
+<p><img src="https://i.loli.net/2020/03/04/zylw45YTmori3vh.png" alt="既是二叉查找树又是二叉平衡树.png"></p>
+<p>2.特点：任意两个节点的左右子树都是平衡二叉树</p>
+<p>3.主要算法：红黑树、AVL、Treap、伸展树、SBT等。</p>
+<h1 id="B树-B-树"><a href="#B树-B-树" class="headerlink" title="B树(B-树)"></a>B树(B-树)</h1><p>1.本质：m阶的平衡二叉树</p>
+<h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><p>1.介绍：红黑树和AVL树类似，都是在进行插入和删除操作时通过特定操作保持二叉查找树的平衡，从而获得较高的查找性能。</p>
+<p>2.定义：红黑树是一种含有红黑结点并能自平衡的二叉查找树。它必须满足下面性质：</p>
+<ul>
+<li>性质1：每个节点要么是黑色，要么是红色。</li>
+<li>性质2：根节点是黑色。</li>
+<li>性质3：每个叶子节点（NULL节点）是黑色。</li>
+<li>性质4：每个红色结点的两个子结点一定都是黑色。</li>
+<li><strong>性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。</strong></li>
+</ul>
+<p>下面的就是一个红黑树，上面的性质5说一下是什么意思吧，就比如<code>007</code>这个根节点到叶子节点，有两种走法</p>
+<p>第一种就是从<code>006</code>这个节点走，此时也有两种走法:<code>007</code>-&gt;<code>006</code>-&gt;<code>001</code>-&gt;<code>NULL</code>和<code>007</code>-&gt;<code>006</code>-&gt;<code>NULL</code>，此时经过的黑结点树是一致的都是为1个节点(不算叶子节点)</p>
+<p>第二种就是从<code>008</code>这个节点，此时也是经过1个黑节点。综上所述，<code>007</code>到叶子节点经过的黑节点的数量总是为1点(只针对这一个图，要是后面再加节点的话，数量不是1，是其他的数)</p>
+<p><img src="https://i.loli.net/2020/03/04/hLutajd9YcKXMg3.png" alt="红黑树.png"></p>
 
       
     </div>
@@ -539,7 +594,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/PAT/" rel="tag"><i class="fa fa-tag"></i> PAT</a>
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
           
         </div>
       
@@ -552,8 +607,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/14/c-中string类型和数字类型转换/" rel="next" title="c++中string类型和数字类型转换">
-                <i class="fa fa-chevron-left"></i> c++中string类型和数字类型转换
+              <a href="/2020/03/03/mysql的一些原理/" rel="next" title="Mysql的索引">
+                <i class="fa fa-chevron-left"></i> Mysql的索引
               </a>
             
           </div>
@@ -561,10 +616,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/31/PAT-B-1044-火星数字/" rel="prev" title="PAT-B 1044 火星数字">
-                PAT-B 1044 火星数字 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -750,7 +801,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入格式："><span class="nav-number">1.1.</span> <span class="nav-text">输入格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出格式："><span class="nav-number">1.2.</span> <span class="nav-text">输出格式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入样例："><span class="nav-number">1.3.</span> <span class="nav-text">输入样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出样例："><span class="nav-number">1.4.</span> <span class="nav-text">输出样例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过截图"><span class="nav-number">1.6.</span> <span class="nav-text">通过截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题总结以及思路"><span class="nav-number">1.7.</span> <span class="nav-text">问题总结以及思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">1.7.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题总结"><span class="nav-number">1.7.2.</span> <span class="nav-text">问题总结</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树"><span class="nav-number">1.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完全二叉树"><span class="nav-number">2.</span> <span class="nav-text">完全二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉查找树-BST"><span class="nav-number">3.</span> <span class="nav-text">二叉查找树(BST)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#平衡二叉树"><span class="nav-number">4.</span> <span class="nav-text">平衡二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-B-树"><span class="nav-number">5.</span> <span class="nav-text">B树(B-树)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#红黑树"><span class="nav-number">6.</span> <span class="nav-text">红黑树</span></a></li></ol></div>
             
 
           </div>
@@ -945,7 +996,7 @@
 
 <script>
   window.livereOptions = {
-    refer: '2019/07/24/PAT-B-1072-开学寄语/'
+    refer: '2020/03/03/树的相关知识复习/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
