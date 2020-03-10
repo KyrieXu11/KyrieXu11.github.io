@@ -103,11 +103,12 @@
 <meta property="og:description" content="HashMap的在JDK1.7的实现jdk1.7中的hashmap的数据结构hashmap在jdk1.7种的实现是：数组+链表，在put的时候，会调用key的hash方法，来计算Entry的存储位置，Entry就是存放key-value的一种数据结构。  如果key的hash值重了的话，就使用链表的头插法来在对应的位置插入key-value，在记录使用头插法会带来什么样的后果之前，先来看一下扩容(">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://i.loli.net/2020/03/09/HZ6yfRP7r9L1d2K.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/58e67eae921e4b431782c07444af824e_720w.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/10/fpSX4OmMk85THZV.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/10/O8m7UizQbvFuq6w.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/10/tM1gT7ybKAe6Yh5.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/10/cXp2DMAyohKCj6I.png">
-<meta property="og:updated_time" content="2020-03-10T14:32:44.441Z">
+<meta property="og:updated_time" content="2020-03-10T15:07:09.196Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hashmap的相关总结">
 <meta name="twitter:description" content="HashMap的在JDK1.7的实现jdk1.7中的hashmap的数据结构hashmap在jdk1.7种的实现是：数组+链表，在put的时候，会调用key的hash方法，来计算Entry的存储位置，Entry就是存放key-value的一种数据结构。  如果key的hash值重了的话，就使用链表的头插法来在对应的位置插入key-value，在记录使用头插法会带来什么样的后果之前，先来看一下扩容(">
@@ -441,7 +442,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-10 22:32:44" itemprop="dateModified" datetime="2020-03-10T22:32:44+08:00">2020-03-10</time>
+                <time title="修改时间：2020-03-10 23:07:09" itemprop="dateModified" datetime="2020-03-10T23:07:09+08:00">2020-03-10</time>
               </span>
             
           
@@ -525,6 +526,8 @@
 <p>下面是扩容的实现：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resize</span><span class="params">(<span class="keyword">int</span> newCapacity)</span> </span>&#123;</span><br><span class="line">    Entry[] oldTable = table;</span><br><span class="line">    <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">    <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</span><br><span class="line">        threshold = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Entry[] newTable = <span class="keyword">new</span> Entry[newCapacity];</span><br><span class="line">    transfer(newTable, initHashSeedAsNeeded(newCapacity));</span><br><span class="line">    table = newTable;</span><br><span class="line">    threshold = (<span class="keyword">int</span>)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>上面的过程呢，下面这张图大概可以看的出来：</p>
+<p><img src="https://pic3.zhimg.com/80/58e67eae921e4b431782c07444af824e_720w.png" alt="img">]</p>
 <p>在看扩容之前，首先要了解<strong>加载因子(LOAD_FACTOR)、容量(Capacity)、阈值(Threshold)</strong>，hashmap的默认加载因子是：<code>0.75f</code>，默认的容量是：<code>16</code>，还有一个阈值(<strong>threshold</strong>)：这个阈值就是扩容的界限，那么怎么得到阈值呢？</p>
 <p><strong>Threshold = load_factor *  capacity</strong>，就是容量*加载因子，由上可得默认的扩容阈值是<code>12</code>。</p>
 <p>那么为什么要选择0.75作为默认的加载因子呢？</p>
@@ -589,6 +592,7 @@
 </ol>
 <h2 id="jdk1-8的hashmap是线程安全的吗？"><a href="#jdk1-8的hashmap是线程安全的吗？" class="headerlink" title="jdk1.8的hashmap是线程安全的吗？"></a>jdk1.8的hashmap是线程安全的吗？</h2><p>不是。</p>
 <p>使用尾插法解决jdk1.7中的死循环问题，并不代表它在并发环境下的执行不会出错，有可能一个线程上一秒往hashmap中put数据，下一秒想读出那个数据，但是读出来的数据不是想要的。这是因为通篇实现都没有加上<code>synchronized</code>关键字，来确保线程同步。</p>
+<p>如果想看详情的可以看这个文章：<a href="https://zhuanlan.zhihu.com/p/21673805" target="_blank" rel="noopener">Java 8系列之重新认识HashMap</a></p>
 
       
     </div>
