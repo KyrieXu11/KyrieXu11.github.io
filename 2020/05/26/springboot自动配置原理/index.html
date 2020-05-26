@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/My-icon-16x16.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/My-icon-16x16.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="SpringBoot自动化配置原理写这篇博客的来由网上很多都是互相抄来抄去的，并且排版做的也不太行，看的头皮发麻，还不如自己过一遍，废话不多说了，开始吧。 程序的入口自动化配置的入口，是从@SpringBootApplication的注解开始的。如果不想下载源码的话，就新建一个springboot的项目，写一个主类  点进@SpringBootApplication之后，我们可以看到下面的代码，注">
+<meta name="keywords" content="spring 学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot自动配置原理">
+<meta property="og:url" content="https://KyrieXu11.github.io/2020/05/26/springboot自动配置原理/index.html">
+<meta property="og:site_name" content="Secret Box of Xu">
+<meta property="og:description" content="SpringBoot自动化配置原理写这篇博客的来由网上很多都是互相抄来抄去的，并且排版做的也不太行，看的头皮发麻，还不如自己过一遍，废话不多说了，开始吧。 程序的入口自动化配置的入口，是从@SpringBootApplication的注解开始的。如果不想下载源码的话，就新建一个springboot的项目，写一个主类  点进@SpringBootApplication之后，我们可以看到下面的代码，注">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/lvg4JMbxwCU5DcY.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/UDp2oxMBQ9YvGEX.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/1ZTsdzA5nMbLPwI.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/YpnVlAzRShkt9Fs.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/byx8mrU2OXIC6eW.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/2IGicRvFATLnb1E.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/21/Np3vxgR2lZukJ48.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/8XmpVfQYh9RniZk.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/6kMjfroQVUvsAJE.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/Gc1QbTsMdz8vEuS.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/B65kc7wbULamlVx.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/dWvotiPnJ4jGmg6.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/mCOdF4bATGqtQs2.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/IPXbf9DlkhC67TM.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/26/V6AetWTfa3zIZH1.png">
+<meta property="og:updated_time" content="2020-05-26T13:38:24.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springboot自动配置原理">
+<meta name="twitter:description" content="SpringBoot自动化配置原理写这篇博客的来由网上很多都是互相抄来抄去的，并且排版做的也不太行，看的头皮发麻，还不如自己过一遍，废话不多说了，开始吧。 程序的入口自动化配置的入口，是从@SpringBootApplication的注解开始的。如果不想下载源码的话，就新建一个springboot的项目，写一个主类  点进@SpringBootApplication之后，我们可以看到下面的代码，注">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/21/lvg4JMbxwCU5DcY.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://KyrieXu11.github.io/2020/05/26/springboot自动配置原理/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>springboot自动配置原理 | Secret Box of Xu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Secret Box of Xu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我不会试图摘月，我要那月亮奔我而来。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">14</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">7</span></a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">25</span></a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://KyrieXu11.github.io/2020/05/26/springboot自动配置原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KyrieXu">
+      <meta itemprop="description" content="记录生活点滴以及遇到的问题">
+      <meta itemprop="image" content="/images/SecretBoxOfKyrieXu.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Secret Box of Xu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">springboot自动配置原理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-26 21:37:38 / 修改时间：21:38:24" itemprop="dateCreated datePublished" datetime="2020-05-26T21:37:38+08:00">2020-05-26</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">9.8k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">16 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SpringBoot自动化配置原理"><a href="#SpringBoot自动化配置原理" class="headerlink" title="SpringBoot自动化配置原理"></a>SpringBoot自动化配置原理</h1><h1 id="写这篇博客的来由"><a href="#写这篇博客的来由" class="headerlink" title="写这篇博客的来由"></a>写这篇博客的来由</h1><p>网上很多都是互相抄来抄去的，并且排版做的也不太行，看的头皮发麻，还不如自己过一遍，废话不多说了，开始吧。</p>
+<h1 id="程序的入口"><a href="#程序的入口" class="headerlink" title="程序的入口"></a>程序的入口</h1><p>自动化配置的入口，是从<code>@SpringBootApplication</code>的注解开始的。如果不想下载源码的话，就新建一个<code>springboot</code>的项目，写一个主类</p>
+<p><img src="https://i.loli.net/2020/05/21/lvg4JMbxwCU5DcY.png" alt="image.png"></p>
+<p>点进<code>@SpringBootApplication</code>之后，我们可以看到下面的代码，注解很多，但是我们需要看的就是<code>@EnableAutoConfiguration</code></p>
+<p><img src="https://i.loli.net/2020/05/21/UDp2oxMBQ9YvGEX.png" alt="2.png"></p>
+<p>再次点进<code>@EnableAutoConfiguration</code>，这里说一下这个注解有什么用，文档是这样写的：</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; Enable auto-configuration of the Spring Application Context, attempting to guess and</span><br><span class="line">&gt; configure beans that you are likely to need. Auto-configuration classes are usually</span><br><span class="line">&gt; applied based on your classpath and what beans you have defined. For example, if you</span><br><span class="line">&gt; have &#123;@code tomcat-embedded.jar&#125; on your classpath you are likely to want a</span><br><span class="line">&gt; &#123;@link TomcatServletWebServerFactory&#125; (unless you have defined your own</span><br><span class="line">&gt; &#123;@link ServletWebServerFactory&#125; bean).</span><br><span class="line">&gt; </span><br><span class="line">&gt; When using &#123;@link SpringBootApplication @SpringBootApplication&#125;, the auto-configuration of the context is automatically enabled and adding this annotation has therefore no additional effect.</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面的大概的意思就是，当你开启了自动配置的时候，spring就会猜你想要使用的哪个类。自动配置的类是基于你的<code>classpath</code>和你定义了哪些<code>bean</code>来自动化配置的。如果用了<code>@SpringBootApplication</code>注解再用这个注解没有一点卵用。ㄟ( ▔, ▔ )ㄏ</p>
+<p>继续上面的说下去，点进<code>@EnableAutoConfiguration</code>就会看见下面的代码</p>
+<p><img src="https://i.loli.net/2020/05/21/1ZTsdzA5nMbLPwI.png" alt="4.png"></p>
+<p>这个<code>@Import</code>注解有几个作用：</p>
+<ul>
+<li>声明一个bean</li>
+<li>导入<code>configuration</code>类</li>
+<li>导入<code>ImportSelector</code>的实现类</li>
+<li>导入<code>ImportBeanDefinitionRegistrar</code>的实现类</li>
+</ul>
+<p>这里就是导入<code>ImportSelector</code>的实现类，所以我们点进<code>AutoConfigurationImportSelector</code>。</p>
+<p><img src="https://i.loli.net/2020/05/21/YpnVlAzRShkt9Fs.png" alt="autoconfigurationselector.png"></p>
+<p>我们可以看到，核心的方法就是<code>override</code>的<code>selectImports</code>，所以我们重点来看看这个<code>selectImports</code>。</p>
+<p>所在的包是：<code>org.springframework.boot.autoconfigure</code></p>
+<h2 id="loadMetadata"><a href="#loadMetadata" class="headerlink" title="loadMetadata"></a>loadMetadata</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader</span><br><span class="line">				.loadMetadata(<span class="keyword">this</span>.beanClassLoader);</span><br></pre></td></tr></table></figure>
+
+<p>上面的就是加载元数据，所以我们要看看怎么加载的，点进<code>loadMetadata</code>，是在<code>AutoConfigurationMetadataLoader.java</code>中的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> AutoConfigurationMetadata <span class="title">loadMetadata</span><span class="params">(ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> loadMetadata(classLoader, PATH);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们首先看看<code>PATH</code>是什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"META-INF/spring-autoconfigure-metadata.properties"</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>PATH</code>是在<code>META-INF</code>下的一个文件</p>
+<p><img src="https://i.loli.net/2020/05/21/byx8mrU2OXIC6eW.png" alt="metadata_properties.png"></p>
+<p>我们打开这个文件看一下</p>
+<p><img src="https://i.loli.net/2020/05/21/2IGicRvFATLnb1E.png" alt="autoconfiguration_metadata_properties.png"></p>
+<p>基本上都是<code>xxxxAutoConfiguration</code>类结尾，所以上面的<code>loadMetadata</code>是加载一些自动化配置的类的入口，继续返回到<code>AutoConfigurationImportSelector.java</code></p>
+<h2 id="getAutoConfigurationEntry"><a href="#getAutoConfigurationEntry" class="headerlink" title="getAutoConfigurationEntry"></a>getAutoConfigurationEntry</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AutoConfigurationEntry autoConfigurationEntry=getAutoConfigurationEntry(autoConfigurationMetadata,</span><br><span class="line">      annotationMetadata);</span><br></pre></td></tr></table></figure>
+
+<p>接着上面的继续看，上面方法的参数有<code>autoConfigurationMetadata</code>这个就是上面加载的元数据，点进<code>getAutoConfigurationEntry</code>，看到下面这个方法，这个方法还是在``AutoConfigurationImportSelector.java`中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> AutoConfigurationEntry <span class="title">getAutoConfigurationEntry</span><span class="params">(AutoConfigurationMetadata autoConfigurationMetadata,</span></span></span><br><span class="line"><span class="function"><span class="params">			AnnotationMetadata annotationMetadata)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">			<span class="keyword">return</span> EMPTY_ENTRY;</span><br><span class="line">		&#125;</span><br><span class="line">		AnnotationAttributes attributes = getAttributes(annotationMetadata);</span><br><span class="line">		List&lt;String&gt; configurations = getCandidateConfigurations(annotationMetadata, attributes);</span><br><span class="line">		configurations = removeDuplicates(configurations);</span><br><span class="line">		Set&lt;String&gt; exclusions = getExclusions(annotationMetadata, attributes);</span><br><span class="line">		checkExcludedClasses(configurations, exclusions);</span><br><span class="line">		configurations.removeAll(exclusions);</span><br><span class="line">		configurations = filter(configurations, autoConfigurationMetadata);</span><br><span class="line">		fireAutoConfigurationImportEvents(configurations, exclusions);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> AutoConfigurationEntry(configurations, exclusions);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一行一行的来看，第一个方法就是</p>
+<h3 id="getAttributes"><a href="#getAttributes" class="headerlink" title="getAttributes"></a>getAttributes</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AnnotationAttributes attributes = getAttributes(annotationMetadata);</span><br></pre></td></tr></table></figure>
+
+<p>这个就是从元数据中获取属性，点进这个方法看</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> AnnotationAttributes <span class="title">getAttributes</span><span class="params">(AnnotationMetadata metadata)</span> </span>&#123;</span><br><span class="line">		String name = getAnnotationClass().getName();</span><br><span class="line">		AnnotationAttributes attributes = AnnotationAttributes.fromMap(metadata.getAnnotationAttributes(name, <span class="keyword">true</span>));</span><br><span class="line">		Assert.notNull(attributes, () -&gt; <span class="string">"No auto-configuration attributes found. Is "</span> + metadata.getClassName()</span><br><span class="line">				+ <span class="string">" annotated with "</span> + ClassUtils.getShortName(name) + <span class="string">"?"</span>);</span><br><span class="line">		<span class="keyword">return</span> attributes;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String name = getAnnotationClass().getName();</span><br></pre></td></tr></table></figure>
+
+<p>上面的语句等价于</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EnableAutoConfiguration.class.getName()</span><br></pre></td></tr></table></figure>
+
+<p>所以<code>name</code>这个变量就是<code>EnableAutoConfiguration</code></p>
+<p>我们接着看下去：</p>
+<p>下面的这个方法，就是从给定的<code>Map</code>中获取属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AnnotationAttributes.fromMap()</span><br></pre></td></tr></table></figure>
+
+<p>官方的文档是这样写的：</p>
+<blockquote>
+<ul>
+<li><p>Return an {@link AnnotationAttributes} instance based on the given map.</p>
+</li>
+<li><p>If the map is already an {@code AnnotationAttributes} instance, it
+</p></li>
+<li><p>will be cast and returned immediately without creating a new instance.</p>
+</li>
+<li><p>Otherwise a new instance will be created by passing the supplied map</p>
+</li>
+<li><p>to the {@link #AnnotationAttributes(Map)} constructor.</p>
+</li>
+<li><p>@param map original source of annotation attribute <em>key-value</em> pairs</p>
+</li>
+</ul>
+</blockquote>
+<p>大概的意思就是说：基于给定<code>map</code>返回一个<code>AnnotationAttributes</code>，如果<code>map</code>已经是一个这个类的实例了，那么这个会被强制转换并且返回，否则创建新的实例。</p>
+<p>具体的看看这个方法的源码就会很容易弄懂：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AnnotationAttributes <span class="title">fromMap</span><span class="params">(@Nullable Map&lt;String, Object&gt; map)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">if</span> (map == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">if</span> (map <span class="keyword">instanceof</span> AnnotationAttributes) &#123;</span><br><span class="line">      <span class="keyword">return</span> (AnnotationAttributes) map;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> AnnotationAttributes(map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么一个<code>map</code>会是一个这个类的实例呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnnotationAttributes</span> <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">String</span>, <span class="title">Object</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个类继承自<code>LinkedHashMap&lt;String, Object&gt;</code></p>
+<p>接着看括号里面的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">metadata.getAnnotationAttributes(name, <span class="keyword">true</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个方法很明显返回的是一个<code>Map&lt;String,Object&gt;</code>类型的，这个方法实现的功能大概是：从给定的注解取出属性。</p>
+<p>这个方法有两个参数，第一个参数是：类名称。第二个参数是：是否将取出来的属性转换成<code>String</code>类型的。</p>
+<p>总之就是从注解中获取属性，然后返回。</p>
+<h3 id="getCandidateConfigurations"><a href="#getCandidateConfigurations" class="headerlink" title="getCandidateConfigurations"></a>getCandidateConfigurations</h3><p>方法还是位于<code>AutoConfigurationImportSelector.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; configurations = getCandidateConfigurations(annotationMetadata, attributes);</span><br></pre></td></tr></table></figure>
+
+<p>文档说的是</p>
+<blockquote>
+<p>Return the auto-configuration class names that should be considered</p>
+</blockquote>
+<p>就是这个方法返回自动配置的类的名称，点进这个方法</p>
+<p><img src="https://i.loli.net/2020/05/21/Np3vxgR2lZukJ48.png" alt="getCandidateConfiguration.png"></p>
+<p>方法有两个参数，第一个参数是：注解的元数据，就是<code>selectImports</code>中的第二个参数。而第二个参数呢，就是上面获取的属性。</p>
+<h4 id="loadFactoryNames"><a href="#loadFactoryNames" class="headerlink" title="loadFactoryNames"></a>loadFactoryNames</h4><p>上面有一个方法：<code>loadFactoryNames</code>，这个方法的作用就是用给定的类加载器，加载类，而继续往下看会得到一个关键的信息，这个方法的返回值是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());</span><br></pre></td></tr></table></figure>
+
+<p>先说一个<code>getOrDefault</code>这个方法的作用吧。这个是<code>Map</code>提供的<code>api</code>，作用就是首先在<code>map</code>中找第一个参数对应的值，如果没找到，那么返回的不是<code>null</code>，而是后面第二个参数。</p>
+<p>继续往下看，<code>loadSpringFactories</code>，这个方法会有一个很关键的信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; loadSpringFactories(<span class="meta">@Nullable</span> ClassLoader classLoader) &#123;</span><br><span class="line">   MultiValueMap&lt;String, String&gt; result = cache.get(classLoader);</span><br><span class="line">   <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      Enumeration&lt;URL&gt; urls = (classLoader != <span class="keyword">null</span> ?</span><br><span class="line">            classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :</span><br><span class="line">            ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));</span><br><span class="line">      result = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">      <span class="keyword">while</span> (urls.hasMoreElements()) &#123;</span><br><span class="line">         URL url = urls.nextElement();</span><br><span class="line">         UrlResource resource = <span class="keyword">new</span> UrlResource(url);</span><br><span class="line">         Properties properties = PropertiesLoaderUtils.loadProperties(resource);</span><br><span class="line">         <span class="keyword">for</span> (Map.Entry&lt;?, ?&gt; entry : properties.entrySet()) &#123;</span><br><span class="line">            String factoryTypeName = ((String) entry.getKey()).trim();</span><br><span class="line">            <span class="keyword">for</span> (String factoryImplementationName : StringUtils.commaDelimitedListToStringArray((String) entry.getValue())) &#123;</span><br><span class="line">               result.add(factoryTypeName, factoryImplementationName.trim());</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      cache.put(classLoader, result);</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>省去异常，上面就是核心代码了。说一下执行的流程：</p>
+<ol>
+<li>首先从缓存中取</li>
+</ol>
+<p>缓存的代码是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;ClassLoader, MultiValueMap&lt;String, String&gt;&gt; cache = <span class="keyword">new</span> ConcurrentReferenceHashMap&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>使用了一个<code>ConcurrentHashMap</code>来做缓存，键值对的关系是<code>String</code>-&gt;<code>MultiValueMap&lt;String, String&gt;</code>的映射，<code>MultiValueMap&lt;String, String&gt;</code>我们其实也可以把其理解为一个<code>Map</code>，他本身也是一个接口，继承；；了<code>Map</code>接口。</p>
+<ol start="2">
+<li>获取资源</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Enumeration&lt;URL&gt; urls = (classLoader != <span class="keyword">null</span> ?</span><br><span class="line">      classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :</span><br><span class="line">      ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>FACTORIES_RESOURCE_LOCATION</code>就是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FACTORIES_RESOURCE_LOCATION = <span class="string">"META-INF/spring.factories"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>看看这个文件，里面</p>
+<p><img src="https://i.loli.net/2020/05/26/8XmpVfQYh9RniZk.png" alt="image.png"></p>
+<p><code>spring.factories</code>就像是工厂一样配置了大量的接口对应的实现类，我们通过这些配置 + 反射处理就可以拿到相应的实现类。这种类似于插件式的设计方式，只要引入对应的jar包，那么对应的<code>spring.factories</code>就会被扫描到，对应的实现类也就会被实例化，如果不需要的时候，直接把jar包移除即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Properties properties = PropertiesLoaderUtils.loadProperties(resource);</span><br></pre></td></tr></table></figure>
+
+<p>这条语句就是将上面的<code>spring.factories</code>给填充到内存的<code>properties</code>对象中去</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">StringUtils.commaDelimitedListToStringArray()</span><br></pre></td></tr></table></figure>
+
+<p>上面这个方法就是将后面的用逗号隔开的类名转换成数组</p>
+<p><code>loadSpringFactories</code>这个方法返回的就是上面的<code>factories</code>文件的键值对，而正是这些键值对，才能告诉spring，这些自动化配置类的名称是什么，才能自动化配置。</p>
+<h1 id="自己写一个Starter"><a href="#自己写一个Starter" class="headerlink" title="自己写一个Starter"></a>自己写一个Starter</h1><p>自己写一个<code>starter</code>才能更好的理解上面的<code>spring.factories</code>文件的作用了。</p>
+<h2 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h2><p>自己写的starter命名应该是：<code>xxx-spring-boot-starter</code></p>
+<p>spring官方写的starter的命名是：<code>spring-boot--starter-xxx</code></p>
+<h2 id="写入依赖"><a href="#写入依赖" class="headerlink" title="写入依赖"></a>写入依赖</h2><p>创建一个<code>maven</code>项目，在<code>pom.xml</code>中加入下面的依赖(<strong>不用创建springboot项目</strong>)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-configuration-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-autoconfigure<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的<code>spring.boot.version</code>就是你的<code>springboot</code>版本，需要在<code>&lt;properties&gt;</code>标签中指定</p>
+<h2 id="创建配置类"><a href="#创建配置类" class="headerlink" title="创建配置类"></a>创建配置类</h2><p>配置类就是将配置文件的属性注入到<code>java</code>代码中的类。</p>
+<p><code>@ConfigurationProperties</code>这个注解就是将配置文件的值注入到代码中，其中必须指定<code>prefix</code>也就是配置文件中的前缀</p>
+<p><img src="https://i.loli.net/2020/05/26/6kMjfroQVUvsAJE.png" alt="starter-1.png"></p>
+<h2 id="写配置文件"><a href="#写配置文件" class="headerlink" title="写配置文件"></a>写配置文件</h2><p>在<code>resources</code>文件目录下新建一个<code>application.yml</code>或者<code>application.properties</code>文件，写入下面的配置，注意前缀需要和上面代码的前缀一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xu.firstName=kyrie</span><br><span class="line">xu.lastName=xu</span><br><span class="line">xu.age=13</span><br></pre></td></tr></table></figure>
+
+<h2 id="写对外提供的一些类"><a href="#写对外提供的一些类" class="headerlink" title="写对外提供的一些类"></a>写对外提供的一些类</h2><p><img src="https://i.loli.net/2020/05/26/Gc1QbTsMdz8vEuS.png" alt="starter-2.png"></p>
+<p>这里为了简便起见，我就写了一个<code>hello</code>方法，三个和配置文件一样的属性，<code>hello</code>方法其实就是<code>toString</code>方法，注意，<strong>这个类不需要加任何的注解</strong></p>
+<h2 id="写自动配置类"><a href="#写自动配置类" class="headerlink" title="写自动配置类"></a>写自动配置类</h2><p><img src="https://i.loli.net/2020/05/26/B65kc7wbULamlVx.png" alt="starter-3.png"></p>
+<p>这个类有几点好说的：</p>
+<ol>
+<li><code>@EnableConfigurationProperties</code>是开启配置文件属性注入，需要指定哪些类是配置文件注入的</li>
+<li>要标示为配置类，所以得加上<code>@Configuration</code></li>
+<li><code>@ConditionalOnClass</code>是只有当后面指定的<code>xxx.class</code>在项目中的<code>classpath</code>才会生效，不然不生效</li>
+<li><code>@ConditionalOnMissingBean</code>是表示，只有这个<code>bean</code>没有自定义的时候，就用预先配置好的<code>bean</code>，有用户在配置的同名<code>bean</code>的时候使用用户配置的<code>bean</code></li>
+</ol>
+<p>现在还没看见<code>spring.factories</code>文件？别着急，下一步就是的了。</p>
+<h2 id="编写spring-factories文件"><a href="#编写spring-factories文件" class="headerlink" title="编写spring.factories文件"></a>编写spring.factories文件</h2><p>在<code>resources</code>文件目录下新建一个<code>META-INF</code>的文件夹，在该文件夹下新建一个<code>spring.factories</code>文件，里面指定自动配置类的类名是什么，配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.kyriexu.HelloServiceAutoConfiguration</span><br></pre></td></tr></table></figure>
+
+<h2 id="打包或者上传到maven私服"><a href="#打包或者上传到maven私服" class="headerlink" title="打包或者上传到maven私服"></a>打包或者上传到maven私服</h2><p><img src="https://i.loli.net/2020/05/26/dWvotiPnJ4jGmg6.png" alt="image.png"></p>
+<p>这里为了简便起见，我直接安装到本地的maven仓库，不影响结果</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>导入测试相关的依赖包</p>
+<p>编写测试的代码</p>
+<p><img src="https://i.loli.net/2020/05/26/mCOdF4bATGqtQs2.png" alt="starter-4.png"></p>
+<p>运行效果：</p>
+<p><img src="https://i.loli.net/2020/05/26/IPXbf9DlkhC67TM.png" alt="image.png"></p>
+<p>当然我们也可以在项目的配置文件中重新配置，如下：</p>
+<p><img src="https://i.loli.net/2020/05/26/V6AetWTfa3zIZH1.png" alt="starter-5.png"></p>
+<p>运行的结果也会变化，我这就不写了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/spring-学习/" rel="tag"><i class="fa fa-tag"></i> spring 学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/09/hashmap的相关总结/" rel="next" title="hashmap的相关总结">
+                <i class="fa fa-chevron-left"></i> hashmap的相关总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NTAyNi8yMTU0NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/SecretBoxOfKyrieXu.png" alt="KyrieXu">
+            
+              <p class="site-author-name" itemprop="name">KyrieXu</p>
+              <div class="site-description motion-element" itemprop="description">记录生活点滴以及遇到的问题</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot自动化配置原理"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot自动化配置原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写这篇博客的来由"><span class="nav-number">2.</span> <span class="nav-text">写这篇博客的来由</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序的入口"><span class="nav-number">3.</span> <span class="nav-text">程序的入口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#loadMetadata"><span class="nav-number">3.1.</span> <span class="nav-text">loadMetadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#getAutoConfigurationEntry"><span class="nav-number">3.2.</span> <span class="nav-text">getAutoConfigurationEntry</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#getAttributes"><span class="nav-number">3.2.1.</span> <span class="nav-text">getAttributes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getCandidateConfigurations"><span class="nav-number">3.2.2.</span> <span class="nav-text">getCandidateConfigurations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#loadFactoryNames"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">loadFactoryNames</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己写一个Starter"><span class="nav-number">4.</span> <span class="nav-text">自己写一个Starter</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命名规范"><span class="nav-number">4.1.</span> <span class="nav-text">命名规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入依赖"><span class="nav-number">4.2.</span> <span class="nav-text">写入依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建配置类"><span class="nav-number">4.3.</span> <span class="nav-text">创建配置类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写配置文件"><span class="nav-number">4.4.</span> <span class="nav-text">写配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写对外提供的一些类"><span class="nav-number">4.5.</span> <span class="nav-text">写对外提供的一些类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写自动配置类"><span class="nav-number">4.6.</span> <span class="nav-text">写自动配置类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写spring-factories文件"><span class="nav-number">4.7.</span> <span class="nav-text">编写spring.factories文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包或者上传到maven私服"><span class="nav-number">4.8.</span> <span class="nav-text">打包或者上传到maven私服</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">4.9.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KyrieXu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+    <span title="站点总字数">67k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    
+    <span title="站点阅读时长">1:52</span>
+  
+</div>
+
+
+
+
+
+
+
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+  <span title="post.totalcount">
+     字 </span>
+    <!--<span title="站点总字数">67k</span>-->
+  
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color="0,154,214" opacity="1" zindex="-1" count="150" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: '2020/05/26/springboot自动配置原理/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas> 
+   <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+   <script type="text/javascript" src="/js/fireworks.js"></script>
+   
+
+</body>
+</html>
