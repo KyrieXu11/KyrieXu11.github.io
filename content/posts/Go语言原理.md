@@ -4,9 +4,7 @@ date: 2022-07-28T23:31:00+08:00
 draft: false
 ---
 
-# Go语言原理
-
-## 调用栈
+# 调用栈
 
 栈的地址是由上到下从高地址到低地址的。
 
@@ -16,7 +14,7 @@ go语言的函数调用栈从栈基础地址开始，依次填入局部变量、
 
 并且go语言分配栈空间是一次性分配最大的所需栈空间，因为栈空间在编译期间就可确定，所以可以通过后面要说的`morestack`进行检测，如果分配的不够则会进行栈增长，另外的开辟一块足够大的栈空间，把原来栈上的数据拷贝到新的空间。
 
-![image-20220724192021103](E:/求职/总结/栈.png)
+![image-20220724192021103](栈.png)
 
 
 
@@ -44,7 +42,7 @@ func main() {
 
 在defer函数执行之前，会先给返回值赋值，也就是先给栈上的返回值区域先赋值从0变为1，再执行defer函数。
 
-![golang调用栈帧](E:/求职/总结/golang调用栈帧.jpg)
+![golang调用栈帧](.\golang调用栈帧.jpg)
 
 
 
@@ -71,9 +69,9 @@ func main() {
 
 
 
-## 数据结构
+# 数据结构
 
-### 内存对齐
+## 内存对齐
 
 内存对齐：cpu从内存获取指令通常是一个字的取的，所以一个变量的内存地址跨越了两个字，存在了两个字之间，cpu想要得到这个变量就得读取两次内存，效率比较低，所以go语言会避免这种情况。
 
@@ -104,13 +102,32 @@ zerobase: 空结构体所指向的地址都是一样的，并且所占用的内�
 
 
 
+## 结构体内存对齐
+
+```go
+type AAAA struct {
+		a int8
+		b int16
+		c int32
+		d int64
+}
+```
+
+在对齐时，选择类型占用和最大的字节数作为对齐边界，然后按照顺序摆放变量，对齐之后的结构体内存占用要是对齐边界的整数倍，如果不是就需要往上加一点。上面的结构体对齐参数已经是对齐边界 8 的倍数了，所以不需要更改。
+
+![](结构体内存对齐.png)
 
 
 
+## 关于sizeof的一些疑惑
 
-### 字符串
+https://blog.csdn.net/HaoDaWang/article/details/80005072
 
-#### 编码方式
+
+
+## 字符串
+
+### 编码方式
 
 字符转换成二进制编码，不同编码方式不能通用，所以有了unicode。
 
@@ -120,7 +137,7 @@ zerobase: 空结构体所指向的地址都是一样的，并且所占用的内�
 
 如果统一按照最长的字符来编码，每个字符占的位数太多，可能会导致浪费。
 
-##### utf-8编码方式
+#### utf-8编码方式
 
 | 编号         | 编码模板                   |
 | ------------ | -------------------------- |
@@ -130,7 +147,7 @@ zerobase: 空结构体所指向的地址都是一样的，并且所占用的内�
 
 如将字母`e`进行编码，e的二进制为101（1100101），在第一个编号范围内，可变成 `0 1100101
 
-##### 数据结构
+#### 数据结构
 
 ```go
 type StringHeader struct {
@@ -141,9 +158,9 @@ type StringHeader struct {
 
 比如字符串`w爱n`，len长度为1+3+1=5，data指针指向了字符串开头。
 
-### 切片
+## 切片
 
-#### 数据结构
+### 数据结构
 
 ```go
 type SliceHeader struct {
@@ -153,7 +170,7 @@ type SliceHeader struct {
 }
 ```
 
-#### 初始化
+### 初始化
 
 不论是切片还是其他的，查看初始化的过程可以使用
 
@@ -161,7 +178,7 @@ type SliceHeader struct {
 go build -gcflags -S xxx.go
 ```
 
-##### 字面量
+#### 字面量
 
 字面量是指创建方式为： arr:=[]int{1, 2, 3}
 
@@ -178,7 +195,7 @@ arr := SliceHeader {
 
 
 
-##### make
+#### make
 
 如果使用make(slice, len, cap)则会将上面的数据结构中的len和cap都置为make参数中的len和cap。
 
@@ -193,11 +210,11 @@ ints = append(ints, 3)
 
 data指向数组的开头（只有这里会指向开头），len=2, cap=5
 
-##### new
+#### new
 
 如果为new创建的slice，则data会为nil，len=0,cap=0.
 
-##### 从数组中创建
+#### 从数组中创建
 
 ```go
 	var arr = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -217,13 +234,13 @@ data指向数组的开头（只有这里会指向开头），len=2, cap=5
 10 10 // data指向了0 len=10,cap=10
 ```
 
-#### 追加与扩容
+### 追加与扩容
 
-##### 追加
+#### 追加
 
 如果不扩容，则调整长度len就行，如果需要扩容则需要创建新的数组，将数据挪过去。
 
-##### 扩容
+#### 扩容
 
 https://juejin.cn/post/7101928883280150558
 
@@ -231,25 +248,25 @@ https://juejin.cn/post/7101928883280150558
 
 如果新的容量> 2* 老容量，则直接按照新容量进行扩容。否则，如果原来的容量小于256，则新容量为原来的2倍。如果原来容量大于256，则会进入循环，每次容量都增加 （旧容量 + 3*256）/4。
 
-![image-20220723142302761](E:/求职/总结/切片扩容规则_1.18.png)
+![image-20220723142302761](切片扩容规则_1.18.png)
 
-### map
+## map
 
-#### 数据结构
+### 数据结构
 
 ```go
 type hmap struct {
 	count     int // kv 的长度
-	flags     uint8 // 状态，如正在扩容则会更改这个字段
+	flags     uint8 // 状态，如正在扩容则会更改这个字段，用于标记是等量还是翻倍扩容
 	B         uint8  // buckets长度的2的对数，因为bucket的长度为2的指数
-	noverflow uint16 // 
+	noverflow uint16 // 下一个溢出桶的编号
 	hash0     uint32 // hash算法的种子
 
 	buckets    unsafe.Pointer // bucket的指针，指向了一个bmap数组
-	oldbuckets unsafe.Pointer // previous bucket array of half the size, non-nil only when growing
-	nevacuate  uintptr        // progress counter for evacuation (buckets less than this have been evacuated)
+	oldbuckets unsafe.Pointer // 扩容的时候会把这个oldbuckets指向原来的buckets
+	nevacuate  uintptr        // 下一个执行驱逐的桶编号
 
-	extra *mapextra // optional fields
+	extra *mapextra // 溢出桶
 }
 ```
 
@@ -272,9 +289,9 @@ type bmap struct {
 
 ```
 
-#### 初始化
+### 初始化
 
-##### make
+#### make
 
 1. 初始化map对象
 2. 获取一个hash种子
@@ -331,13 +348,13 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 
 初始化的图示。
 
-![image-20220723170710885](E:/求职/总结/makemap的初始化.png)
+![image-20220723170710885](makemap的初始化.png)
 
-##### 字面量
+#### 字面量
 
 
 
-#### 访问
+### 访问
 
 总体来看，go中的map底层解决hash冲突是通过拉链法来解决的。
 
@@ -345,19 +362,42 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 
 计算桶号的图示过程。
 
-![image-20220723171410035](E:/求职/总结/计算桶号.png)
+![image-20220723171410035](计算桶号.png)
 
 得到桶号之后，访问桶，通过hash值的高8位在bmap中的tophash查询key，然后比对keys是否想要的key，如果key中没有，则去overflow中查询。
+
+```go
+	if h.flags&hashWriting != 0 {
+		throw("concurrent map read and map write")
+	}
+	hash := t.hasher(key, uintptr(h.hash0))
+	m := bucketMask(h.B)
+	b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
+	// 如果有oldBucktes，先去oldBuckets上查询
+	if c := h.oldbuckets; c != nil {
+		if !h.sameSizeGrow() {
+			// There used to be half as many buckets; mask down one more power of two.
+			m >>= 1
+		}
+		oldb := (*bmap)(add(c, (hash&m)*uintptr(t.bucketsize)))
+		if !evacuated(oldb) {
+			b = oldb
+		}
+	}
+	top := tophash(hash)
+```
+
+
 
 如果在扩容的时候进行读取，当`oldbuckets`存在时，会先定位到旧桶并且在该桶没有被分流的时候获取kv，如果分流了就会去已经被分流的bucket去获取。
 
 
 
-#### 写入
+### 写入
 
 和读取的流程一样，只不过
 
-#### 扩容
+### 扩容
 
 扩容的条件
 
@@ -368,7 +408,7 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
 	}
 ```
 
-负载因子>6.5(loadFactorNum/loadFactorDen)或者溢出桶超过了普通桶的个数，则会进行扩容。
+负载因子（元素数量/桶数量）>6.5(loadFactorNum/loadFactorDen)或者溢出桶超过了普通桶的个数，则会进行扩容。
 
 扩容的类型分为两种：翻倍扩容和等量扩容
 
@@ -381,6 +421,51 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
 等量扩容步骤：
 
 和下面的步骤一样，只不过是不会创建新的
+
+```go
+func hashGrow(t *maptype, h *hmap) {
+	// 默认翻倍扩容
+	bigger := uint8(1)
+    // 如果还没超过负载因子，那就不翻倍了
+	if !overLoadFactor(h.count+1, h.B) {
+		bigger = 0
+		h.flags |= sameSizeGrow
+	}
+	oldbuckets := h.buckets
+    // 创建新的bucket和溢出桶
+	newbuckets, nextOverflow := makeBucketArray(t, h.B+bigger, nil)
+
+	flags := h.flags &^ (iterator | oldIterator)
+	if h.flags&iterator != 0 {
+		flags |= oldIterator
+	}
+	// commit the grow (atomic wrt gc)
+	h.B += bigger
+	h.flags = flags
+	h.oldbuckets = oldbuckets
+	h.buckets = newbuckets
+	h.nevacuate = 0
+	h.noverflow = 0
+
+	if h.extra != nil && h.extra.overflow != nil {
+		// Promote current overflow buckets to the old generation.
+		if h.extra.oldoverflow != nil {
+			throw("oldoverflow is not nil")
+		}
+		h.extra.oldoverflow = h.extra.overflow
+		h.extra.overflow = nil
+	}
+	if nextOverflow != nil {
+		if h.extra == nil {
+			h.extra = new(mapextra)
+		}
+		h.extra.nextOverflow = nextOverflow
+	}
+
+	// the actual copying of the hash table data is done incrementally
+	// by growWork() and evacuate().
+}
+```
 
 
 
@@ -395,30 +480,74 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
 
 
 
-## sync.Map
+# sync.Map
 
 
 
-## 接口、指针、结构体
+# 接口、指针、结构体
 
-### 接口
+## 类型系统
 
-#### 数据结构
+每个类型，如int、int64、int32、string、slice、map都会有类型描述信息，这个就是类型元数据，并且每个类型的类型元数据都是全局唯一的。这些信息都被放到了`_type`结构体中。
 
 ```go
-type iface struct {
-	tab  *itab
-	data unsafe.Pointer
-}
-
-type itab struct {
-	inter *interfacetype
-	_type *_type
-	hash  uint32 // copy of _type.hash. Used for type switches.
-	_     [4]byte
-	fun   [1]uintptr // variable sized. fun[0]==0 means _type does not implement inter.
+type _type struct {
+	size       uintptr // 类型占用的空间
+	ptrdata    uintptr // size of memory prefix holding all pointers
+	hash       uint32  // 可以判断两个对象的类型是否相等
+	tflag      tflag
+	align      uint8
+	fieldAlign uint8
+	kind       uint8
+	// function for comparing objects of this type
+	// (ptr to object A, ptr to object B) -> ==?
+	equal func(unsafe.Pointer, unsafe.Pointer) bool
+	// gcdata stores the GC type data for the garbage collector.
+	// If the KindGCProg bit is set in kind, gcdata is a GC program.
+	// Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+	gcdata    *byte
+	str       nameOff
+	ptrToThis typeOff
 }
 ```
+
+
+
+```go
+type MyStruct int
+
+func(o MyStruct) Len() string { return "" }
+func(o MyStruct) Cap() string { return "" }
+```
+
+如果是自定义类型的话，如上所示，会在后面加上一个`uncommontype`结构体。
+
+```go
+type u struct {
+	_type
+	u uncommontype
+}
+```
+
+```go
+type uncommontype struct {
+	pkgpath nameOff // 包路径
+	mcount  uint16 // 方法的数量
+	xcount  uint16 // 可导出的方法的数量
+	moff    uint32 // offset from this uncommontype to [mcount]method
+	_       uint32 // unused
+}
+```
+
+`moff`表示，自定义的结构体中的方法相对于此`uncommontype`偏移了多少个字节。用最上面的自定义的结构体举个例子，通过这个变量就可以找到Len和Cap两个方法。
+
+
+
+
+
+## 接口
+
+### 数据结构
 
 空接口有专门的数据结构
 
@@ -429,20 +558,75 @@ type eface struct {
 }
 ```
 
-例子
+_type类型在上面已经给出。
+
+
+
+有方法的接口
 
 ```go
-var a interface{}
-fmt.Println(a == nil) //true eface{}中既没有type也没有data，所以为nil
-var b *int
-a = b
-fmt.Println(a == nil) // false eface中有type但是data为空，所以不为nil
-fmt.Println(b == nil) // true
+type iface struct {
+	tab  *itab
+	data unsafe.Pointer
+}
+```
+
+```go
+itab
+type itab struct {
+	inter *interfacetype  //  接口类型元数据
+	_type *_type // 实际类型元数据
+	hash  uint32 // 这里的hash，当想把某个接口转换成具体类型的时候，可以用这个字段快速判断两个类型是否相等，这个在类型断言中会用到。
+	_     [4]byte
+	fun   [1]uintptr // 实现的方法地址
+}
+
+interfacetype
+type interfacetype struct {
+	typ     _type
+	pkgpath name
+	mhdr    []imethod
+}
+```
+
+每一个 [`runtime.itab`](https://draveness.me/golang/tree/runtime.itab) 都占 **32** 字节，
+
+
+
+**Go 语言的接口类型不是任意类型**，下面的例子说明在调用NilOrNot函数的时候发生了类型转换，这说明interface不是任意类型。
+
+为什么传进该函数的不是nil？因为在转换的时候，空接口对象不仅包含转换前的变量（这个为nil），还包含转换前的类型。
+
+也就是上面的eface中的`_type`不为nil，data指向的指针为空，所以转换之后的interface不为nil。
+
+```go
+type TestStruct struct{}
+
+func NilOrNot(v interface{}) bool {
+	return v == nil
+}
+
+func main() {
+	var s *TestStruct
+	var i interface{}
+	fmt.Println(s == nil)    // #=> true
+	fmt.Println(NilOrNot(s)) // #=> false
+	fmt.Println(i == nil)    // #=> true
+	fmt.Println(NilOrNot(i)) // #=> true
+}
 ```
 
 
 
-### 结构体
+## 类型断言
+
+空接口是判断`_type`是否为断言的类型元数据，因为类型元数据是全局唯一的。
+
+非空接口比较`itab`中的hash值和断言类型元数据中的hash值是否相等
+
+
+
+### 方法
 
 ```go
 package main
@@ -475,11 +659,11 @@ func main() {
 
 ![image-20220723231524293](E:\求职\总结\struct_编译器优化.png)
 
-## 并发编程
+# 并发编程
 
-### 协程
+## 协程
 
-#### 本质
+### 本质
 
 ```go
 type g struct {
@@ -749,7 +933,7 @@ type schedt struct {
 }
 ```
 
-#### 程序引导启动做了什么
+### 程序引导启动做了什么
 
 https://juejin.cn/post/6942509882281033764
 
@@ -805,11 +989,13 @@ TEXT runtime·rt0_go(SB),NOSPLIT|TOPFRAME,$0
 
 两个主要的全局变量：
 
-`m0`：m0和其他的m的数据结构没有任何区别，在上面的汇编代码中可以看见m0是在go程序启动时，用汇编赋值的，而后续的其他m都是通过`mstart`创建的。
+`m0`：主线程对应的m，m0和其他的m的数据结构没有任何区别，在上面的汇编代码中可以看见m0是在go程序启动时，用汇编赋值的，而后续的其他m都是通过`mstart`创建的。
 
-`g0`：与m0一样，其赋值是在进程启动时进行赋值的，在g0上分配的栈是系统栈，调度函数是在g0上运行的。`main-goroutine`是运行runtime.main的协程，是在汇编代码创建并且启动的协程，在runtim.main中的`getg()`获取的就是该协程。
+`g0`：负责在每个正在运行的线程上调度和管理 goroutine的特殊的协程，与`m0`一样，其赋值是在进程启动时进行赋值的，在`g0`上分配的栈是系统栈，调度函数是在`g0`上运行的， **每一个 m 都只有一个 `g0`**（仅此只有一个 `g0`），全局变量的`g0` 是 `m0` 的 `g0`。`main goroutine`是运行runtime.main的协程，是在汇编代码创建并且启动的协程，在runtim.main中的`getg()`获取的就是该协程。
 
-#### 创建新协程经历了什么
+[G0的作用](https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8)：其实就是运行schedule()，m上的g变为_GWaiting了之后，会切换到g0执行调度寻找g。
+
+### 创建新协程经历了什么
 
 前置知识：[调用栈](#调用栈)
 
@@ -843,7 +1029,7 @@ func newproc(fn *funcval) {
 
 		_p_ := getg().m.p.ptr()
 		runqput(_p_, newg, true)
-
+ 
 		if mainStarted {
 			wakep()
 		}
@@ -862,6 +1048,7 @@ newproc的步骤：
 newproc1函数太长了，只放部分关键步骤：
 
 ```go
+
 // 
 func newproc1(fn *funcval, callergp *g, callerpc uintptr) *g {
     // 获取当前g，这里的g就是g0,newproc是切换到g0栈上运行的本函数
@@ -923,32 +1110,30 @@ func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
 1. 抢占m，获取当前的g（g0，因为切换到了g0栈上），禁止m被抢占。
 1. 获取g，如果没获取到就新建一个并且把状态改成_Gdead，并且如果newg没有栈，就新建一个2k的栈，把g添加到allgs中
 1. 将调度器的sp指针指向goexit函数，这样在协程调度回来运行完成之后才会自动调用goexit()函数（因为这里存放的相当于是return addr,是下一条指令的地址），具体可以看https://cloud.tencent.com/developer/article/1836273
-1. 把g的状态从_GDead改成 _GRunnable，从而放到当前p的本地队列。
+1. 把g的状态从_GDead改成 _GRunnable，从而能放到当前p的本地队列。
 1. 释放m。
 
-![](E:/求职/总结/协程调用栈.png)
+![](.\协程调用栈.png)
 
-#### 运行方式
+## 调度
 
-##### 0.x的调度器
-
-![协程运行方式](E:/求职/总结/单线程调度方式.png)
+### 0.x的调度器
 
 1. 获取调度的全局锁。
-2. 从全局队列中获取可执行的go协程。
+2. 从**全局队列（此时就只有一个全局队列）**中获取可执行的go协程。
 3. 修改线程`m`中执行的协程。
 4. 运行协程。
 
 这种方式是单线程取执行的，效率比较低。
 
-##### 1.0的调度器
+### 1.0的调度器
 
 这个时候调度器已经发展成多线程调度器，多线程就是多个线程共享一个协程队列，获取协程运行，但是多线程调度器有许多问题：
 
 1. 协程队列会有并发问题，多个线程争抢锁消耗严重。
 2. 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性；
 
-##### 任务窃取调度器
+### 任务窃取调度器
 
 在上面的多线程的调度器基础上引入了：
 
@@ -983,71 +1168,94 @@ p也有几种状态：
 
 G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程不直接和协程打交道，而是从p中取协程执行，如果p中的协程都被消费完了，p再从全局协程队列获取锁拿取一批协程放入本地队列，如果本地或者全局都没有协程了，则会去看其他线程有没有没执行完的协程，偷几个过来。
 
-如果新建协程则会随机找一个p，放入本地队列，只有所有的p都满了才会放入全局协程队列。
 
-这样也会有一些问题：
 
-单个线程是顺序运行协程，不能够并发运行协程，容易引起后面等待的协程的"协程饥饿"。（和reentrantlock的公平锁和非公平锁一样）
+任务窃取调度器的缺点：
 
-##### 基于协助抢占式调度器
+* 在某些情况下协程不会让出，导致线程饥饿。
+* 在gc时的stw时间太长，会导致程序无法工作。
 
-抢占式调度器是为了防止协程饥饿问题的出现。
+### 抢占式调度器
 
-其思想是线程运行的消耗时间比较长的协程先暂停运行，保存当前的运行状态，切换到本地队列中的协程运行。
+#### 基于协作的抢占式调度器
 
-但是这样又会有一个问题，全局协程队列中的协程也会出现协程饥饿的问题，所以在每个线程运行协程61次之后，每个线程的p会去全局队列中取协程运行，这样就能让全局队列的协程也有机会运行。
+编译器编译的时，在调用函数前，插入`morestack()`函数，在发生函数调用时，可能会执行编译器前插的`morestack()`函数，这个函数调用的`newStack()`会检查协程的`stackguard0`是否为`StackPreemt`这个数是一个很大的数，所以可以用作判断。如果`stackguard0`为`stackpreemt`则会触发抢占，让出当前协程。
 
-###### 调度时机
-
-主动调用时：
-
-1. `gopark`。比如time.Sleep()，业务方法调用此方法后，协程会由`_GRunning`变为`_GWaiting`，并且在该g所关联的p中的timers中等待，而timer中有一个回调函数，在timer时间到了之后，把协程的状态从`_GWaiting`变为`_GRunnable`放回本地队列中，在每个p中都会维护一个最小堆timers，堆顶的就是待运行回调函数的timer，在调度schedule函数运行时，会调用checktimers函数来运行这个回调函数。
-
-   ![](E:/求职/总结/协程切换时机.png)
-
-2. 系统调用。
-
-如果业务方法永不调用暂停的函数，那就不能切换协程了吗？
-
-###### 标记抢占
-
-在编译的时候，编译器会在函数跳转的时候插入一个函数`runtime.morestack()`，该函数本质是看栈空间是否足够，但是每次函数调用的时候都会插入这个函数，所以可以用来标记协程。
-
-如果监控到协程运行超过10ms，就认为该协程可能会造成其他协程饥饿问题，将g中的`stackguard0`置为`stackPreempt(0xfffffade)`，发出抢占请求。
+这种方式有个缺点，那就是这个是主动行为，如果没发生函数调用的时候，这种检测方式将不适用。
 
 
 
-待补充，为什么设置为stackPreempt？和切换栈有关
+#### 基于信号的抢占式调度
+
+1. 在触发gc的栈扫描的时候（下面有gc算法，需要从栈开始扫描），gc线程
+
+### 调度时机
+
+![go调度时机](go调度时机.png)
+
+1. 主动调用`gopark()`，如time.Sleep()底层调用了`gopark`。
+2. 系统调用完成`exitsyscall`。
+3. 协作式调度（编译器在函数调用前插入`morestack()`）。
+4. 系统监控`sysmon`。监控线程由`main goroutine` (`runtime.main`)创建的，确保`timers`执行，该m不需要依赖p。
+
+### 栈增长
+
+在前面[调用栈](#调用栈)中说过，go语言的栈帧大小是一次性确定的，就是通过插入栈增长检测代码确定是否需要栈增长。
+
+`stackguard0`：栈的下界
+
+framesize <= _StackSmall时，如果sp指针 > `stackguard0`，就要进行栈增长。
+
+_StackSmall < framesize <= _StackBig, 超出 `stackguard0`的部分 > _stacksmall就会进行栈增长。
+
+_StackBig < framesize，也会执行栈增长，此时会将`stackguard0`设置为`stackpreemt`。这样执行`morestack`函数的时候，会根据这个值来判断当前协程是否需要被抢占。
+
+### 调度过程
+
+```go
+
+```
+
+
+
+## channel
 
 
 
 
 
-##### 基于信号的抢占式调度
+## select
+
+* select能够在channel上进行非阻塞的收发操作。
+* select在遇到多个channel的时候，会随机选择一个channel执行。
+
+实现原理：
 
 
 
-### 锁
+
+
+## 锁
 
 
 
-## GC
+# GC
 
-### 内存分布
+## 内存分布
 
-![image-20220728215241574](E:/求职/总结/内存分布.png)
+![image-20220728215241574](.\内存分布.png)
 
 指令存在代码段，静态区域和全局变量存在数据段，函数的局部变量、返回值、参数放在栈上，如果不能在编译阶段确定数据对象的大小或者变量的生命周期超出当前所在函数，则会分配在堆上。
 
 栈上的空间不用gc，当函数调用结束就会自动释放，而堆上的空间，如果不能及时释放就会导致内存泄漏。
 
-### 几种垃圾回收算法
+## 几种垃圾回收算法
 
-#### 标记清除算法
+### 标记清除算法
 
 程序用的到的数据，一定是由栈和数据段作为根节点追踪得到的数据，如果从根节点不能追踪到的数据，一定是垃圾数据，就要被回收了，所以把能够追踪到的数据都进行标记，把那些没有标记的数据给清除了，这就是标记清除算法的思想。
 
-##### 三色标记
+#### 三色标记
 
 白色对象：目标的垃圾，需要回收。
 
@@ -1057,11 +1265,11 @@ G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程
 
 最开始的时候，所有的数据都是白色。
 
-![三色1](E:/求职/总结/三色1.png)
+![三色1](.\三色1.png)
 
 把root节点都标记成灰色，灰色表示基于当前节点的追踪还没有完成。
 
-![三色1](E:/求职/总结/三色2.png)
+![三色1](.\三色2.png)
 
 如果基于某个节点的追踪完成之后，会把该节点标记为黑色，表示数据存活并且不需要再基于这个节点进行跟踪了。
 
@@ -1072,15 +1280,15 @@ G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程
 3. 把黑色对象指向的对象标记成灰色的。
 4. 重复上面的步骤，直到没有灰色的对象。此刻堆中的对象只会剩下白色的，就是目标垃圾回收对象。
 
-![tri-color-mark-sweep](E:/求职/总结/三色3.png)
+![tri-color-mark-sweep](.\三色3.png)
 
-#### 复制压缩算法
+### 复制压缩算法
 
 把内存中造成的碎片向一边移动，这样就会腾出一块连续的空间。
 
-![复制移动清理](E:/求职/总结/复制移动清理.png)
+![复制移动清理](.\复制移动清理.png)
 
-#### 分代回收算法(jvm用的算法)
+### 分代回收算法(JVM Serial收集器用的算法)
 
 把内存分为几个区域，保存不同年龄的对象，分为新生代、老年代、永久代。
 
@@ -1088,9 +1296,9 @@ G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程
 
 下面的永久代，已经在jdk8中移除，在早期版本中是存放在方法区中。
 
-![](E:/求职/总结/分代回收.png)
+![](.\分代回收.png)
 
-#### 引用计数法
+### 引用计数法
 
 在程序运行时，gc线程会给每个对象维护一个引用计数器，如果引用到0了，就说明可以进行回收。但是会有一个问题，如果两个对象互相引用，则引用计数器不可能会达到0.
 
@@ -1098,22 +1306,27 @@ G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程
 
 上面说的都是在stop the world 的情况下的gc算法，实际上用户线程不能忍受长时间的stw。
 
-### 垃圾回收的stw优化
+## 垃圾回收的stw优化
 
-#### 增量stw
+### 增量stw
 
 避免一次stw给用户线程给停了，那就分多次，每次只暂停一小段时间。
 
-![](E:/求职/总结/增量stw.png)
+![](增量stw.png)
 
 但是这样会有一个问题，如果采用的是标记清除算法，可能前脚gc线程判定的一个对象是黑色的，后脚用户线程就更改了该对象和原本待清除的对象（此时不该清除）的关联关系，而黑色对象不会再被访问，所以不能改变白色对象的颜色，造成错误的清理。即指针没有指向特定类型的对象，会造成悬挂指针问题，如下图
 
-![](E:/求职/总结/三色标记的弊端.png)
+![](.\三色标记的弊端.png)
 
 所以会引入屏障技术。
 
-##### 两个不变式
+#### 两个不变式
 
 强三色不变式：黑色对象不会指向白色对象，只会指向黑色或者灰色对象。
 
 弱三色不变式：黑色所指向的白色对象，必须包含一个灰色对象指向该白色对象。
+
+写屏障：在屏障之前，对共享变量的改动都会同步到主存中。
+
+读屏障：在屏障之后，从内存中读取的共享变量都是最新的数据。
+
