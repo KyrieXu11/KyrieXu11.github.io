@@ -295,8 +295,8 @@ type bmap struct {
 
 1. 初始化map对象
 2. 获取一个hash种子
-3. 根据传入的 `hint` 计算出需要的最小需要的桶的数量
-4. 如果需要创建bucket，则创建buckets数组和overflow数组，并且使用hmap对象中的指针指向他们。
+3. 根据make函数传入的 `hint` 计算出需要的最小需要的桶的数量
+4. 如果桶的数量>0，则创建buckets数组和overflow数组，并且使用hmap对象中的指针指向他们。
 
 ```go
 // makemap implements Go map creation for make(map[k]v, hint).
@@ -476,7 +476,7 @@ func hashGrow(t *maptype, h *hmap) {
 2. 新建buckets，并进行翻倍，将oldbuckets指针指向原来的bucket，buckets指针指向新建的bucket。并且原来的nextOverflow的指针也指向新的overflowbucket，而oldoverflow指向原来的overflowbucket。（runtime.hashgrow()）
 
 3. 翻倍扩容迁移的过程是在进行数据操作（写操作）渐变式的迁移的，当要去操作一个kv的时候，不光需要操作一个kv，而是要迁移整个bucket。迁移会遇见一个问题，由于buckets数量变化，那么在迁移到目标bucket的时候，该怎么迁移。由于只翻了一倍，原来计算桶号的hash值和当前的hash值的最后几位只差了一位，所以当新桶号的高位为0则桶号不变，高位为1则会迁移到新桶号的桶中。(runtime.growWork())
-4. 当迁移结束，则进行桶的释放。
+4. 当迁移结束，则进行oldBuckets和oldOverflow的释放。
 
 
 
@@ -543,6 +543,43 @@ func (m *Map) missLocked() {
 	m.read.Store(readOnly{m: m.dirty})
 	m.dirty = nil
 	m.misses = 0
+}
+```
+
+
+写入
+```go
+func (m *Map) Store(key, value any) {
+	// 如果read中有，优先把数据更新到read
+	read, _ := m.read.Load().(readOnly)
+	if e, ok := read.m[key]; ok && e.tryStore(&value) {
+		return
+	}
+
+	m.mu.Lock()
+	read, _ = m.read.Load().(readOnly)
+	// 在read中找到了
+	if e, ok := read.m[key]; ok {
+		// e在dirty中删掉了但是在read中有，说明dirty不是空map
+		if e.unexpungeLocked() {
+			// 写入dirty
+			m.dirty[key] = e
+		}
+		e.storeLocked(&value)
+	// 如果read中没有，在dirty中找到了
+	} else if e, ok := m.dirty[key]; ok {
+		e.storeLocked(&value)
+	} else {
+		// dirty 和 read都没有，read需要添加数据
+		if !read.amended {
+			// We're adding the first new key to the dirty map.
+			// Make sure it is allocated and mark the read-only map as incomplete.
+			m.dirtyLocked()
+			m.read.Store(readOnly{m: read.m, amended: true})
+		}
+		m.dirty[key] = newEntry(value)
+	}
+	m.mu.Unlock()
 }
 ```
 
@@ -1450,6 +1487,136 @@ channel底层实现的方式为环形数组。
 
 如果发送者阻塞了会把发送者放入sendq
 
+写入数据到channel是调用`chansend`，从channel读取数据是调用`chanrecv`
+
+### 发送
+写入数据到channel是调用`chansend`，下面是该函数的部分。
+
+可以看见，在channel关闭之后，是不让写数据进去的，直接抛出panic。
+```go
+func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
+
+	if !block && c.closed == 0 && full(c) {
+		return false
+	}
+
+	lock(&c.lock)
+
+	if c.closed != 0 {
+		unlock(&c.lock)
+		panic(plainError("send on closed channel"))
+	}
+
+	if sg := c.recvq.dequeue(); sg != nil {
+		send(c, sg, ep, func() { unlock(&c.lock) }, 3)
+		return true
+	}
+
+	if c.qcount < c.dataqsiz {
+		// Space is available in the channel buffer. Enqueue the element to send.
+		qp := chanbuf(c, c.sendx)
+		c.sendx++
+		if c.sendx == c.dataqsiz {
+			c.sendx = 0
+		}
+		c.qcount++
+		unlock(&c.lock)
+		return true
+	}
+
+	// Block on the channel. Some receiver will complete our operation for us.
+	gp := getg()
+	mysg := acquireSudog()
+	mysg.releasetime = 0
+	if t0 != 0 {
+		mysg.releasetime = -1
+	}
+	mysg.elem = ep
+	mysg.g = gp
+	mysg.c = c
+	gp.waiting = mysg
+	gp.param = nil
+	c.sendq.enqueue(mysg)
+	gopark(chanparkcommit, unsafe.Pointer(&c.lock), waitReasonChanSend, traceEvGoBlockSend, 2)
+	gp.activeStackChans = false
+	closed := !mysg.success
+	mysg.c = nil
+	releaseSudog(mysg)
+	return true
+}
+```
+
+
+### 接收
+接收函数如下（也是节选）。
+
+可以看见在channel close情况下，如果缓冲区还有数据残留，则消费者可以继续从缓冲区消费，而不会panic。
+
+如果channel阻塞了会调用gopark函数让出协程，触发调度。
+
+```go
+func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
+
+	if c == nil {
+		if !block {
+			return
+		}
+		gopark(nil, nil, waitReasonChanReceiveNilChan, traceEvGoStop, 2)
+		throw("unreachable")
+	}
+
+	if !block && empty(c) {
+		if atomic.Load(&c.closed) == 0 {
+			return
+		}
+	}
+
+	lock(&c.lock)
+
+	if c.closed != 0 && c.qcount == 0 {
+		unlock(&c.lock)
+		return true, false
+	}
+
+	if sg := c.sendq.dequeue(); sg != nil {
+		recv(c, sg, ep, func() { unlock(&c.lock) }, 3)
+		return true, true
+	}
+
+	if c.qcount > 0 {
+		// Receive directly from queue
+		qp := chanbuf(c, c.recvx)
+		c.recvx++
+		if c.recvx == c.dataqsiz {
+			c.recvx = 0
+		}
+		c.qcount--
+		unlock(&c.lock)
+		return true, true
+	}
+
+	if !block {
+		unlock(&c.lock)
+		return false, false
+	}
+
+	// no sender available: block on this channel.
+	gp := getg()
+	mysg := acquireSudog()
+	mysg.releasetime = 0
+	gp.waiting = mysg
+	mysg.g = gp
+	gp.param = nil
+	c.recvq.enqueue(mysg)
+	atomic.Store8(&gp.parkingOnChan, 1)
+	gopark(chanparkcommit, unsafe.Pointer(&c.lock), waitReasonChanReceive, traceEvGoBlockRecv, 2)
+	gp.waiting = nil
+	gp.param = nil
+	releaseSudog(mysg)
+	return true, success
+}
+```
+
 
 
 ## select
@@ -1481,7 +1648,7 @@ func selectgo(cas0 *scase, order0 *uint16, pc0 *uintptr, nsends, nrecvs int, blo
 
 ### 工作原理
 
-select会对所有注册的channel轮询（乱序），检查channel的等待队列和缓冲区，如果缓冲区有数据或者能发送数据，则接收数据或者发送数据。加入都不能操作，则把当前的用户协程放入不能操作的channel的等待队列（sendq/recvq）中，等待能够唤醒则把当前g唤醒，并且从channel的等待队列中移除。
+select会对所有注册的channel轮询（乱序），检查channel的等待队列和缓冲区，如果缓冲区有数据或者能发送数据，则接收数据或者发送数据。假如都不能操作，则把当前的用户协程放入不能操作的channel的等待队列（sendq/recvq）中，等待能够唤醒则把当前g唤醒，并且从channel的等待队列中移除。
 
 
 
