@@ -1521,6 +1521,58 @@ gopark的实现方式，是让协程休眠从`_Grunning`变为`_GWaiting`加入�
 
 由`main goroutine`创建的系统监控线程，该m不需要依赖p，会定时调度，保证timers正常运作。
 
+会调用`retake`
+
+#### 系统调用
+
+如果线程上的g陷入了系统调用，则该m也会陷入系统调用而阻塞，此时，会把原来附着的p解绑，并且把p上的m对象解绑，把p的状态改成`_Psyscall`。等待监控线程执行调度。
+
+```go
+func reentersyscall(pc, sp uintptr) {
+	_g_ := getg()
+
+	_g_.stackguard0 = stackPreempt
+	_g_.throwsplit = true
+
+	// Leave SP around for GC and traceback.
+	save(pc, sp)
+	_g_.syscallsp = sp
+	_g_.syscallpc = pc
+	casgstatus(_g_, _Grunning, _Gsyscall)
+	if _g_.syscallsp < _g_.stack.lo || _g_.stack.hi < _g_.syscallsp {
+		systemstack(func() {
+			print("entersyscall inconsistent ", hex(_g_.syscallsp), " [", hex(_g_.stack.lo), ",", hex(_g_.stack.hi), "]\n")
+			throw("entersyscall")
+		})
+	}
+
+	if atomic.Load(&sched.sysmonwait) != 0 {
+		systemstack(entersyscall_sysmon)
+		save(pc, sp)
+	}
+
+	if _g_.m.p.ptr().runSafePointFn != 0 {
+		// runSafePointFn may stack split if run on this stack
+		systemstack(runSafePointFn)
+		save(pc, sp)
+	}
+
+	_g_.m.syscalltick = _g_.m.p.ptr().syscalltick
+	_g_.sysblocktraced = true
+	pp := _g_.m.p.ptr()
+	pp.m = 0
+	_g_.m.oldp.set(pp)
+	_g_.m.p = 0
+	atomic.Store(&pp.status, _Psyscall)
+	if sched.gcwaiting != 0 {
+		systemstack(entersyscall_gcwait)
+		save(pc, sp)
+	}
+
+	_g_.m.locks--
+}
+```
+
 
 
 
