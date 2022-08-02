@@ -4,7 +4,9 @@ date: 2022-07-28T23:31:00+08:00
 draft: false
 ---
 
-# 调用栈
+# 函数调用
+
+## 栈调用
 
 栈的地址是由上到下从高地址到低地址的。
 
@@ -67,7 +69,89 @@ func main() {
 
 匿名函数返回值和上面的代码片段的情况不同在于，后者是直接在返回值的地址上做的修改，所以能够改变最后的b值。
 
+## 寄存器调用
 
+在go1.17版本中，函数调用新增了寄存器调用。
+
+```go
+func add(x int, y int, z int, a, b, c int, d, e, f int, g, h, l int) (int, int, int, int, int, int, int, int, int, int, int) {
+	println(x, y)
+	return 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+}
+
+func main() {
+	println(add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+}
+```
+
+上面的代码在调用函数的时候，会把参数都放入寄存器中，一共有**9个**寄存器，如果寄存器不够就的就和原来栈传递参数一样。
+
+返回值也是使用寄存器一起返回的。
+
+那如果是结构体呢？
+```go
+type RegisterStruct struct {
+	a int8
+	b int16
+	c int32
+	d int64
+	e int64
+	f interface{}
+	g struct{}
+	h string
+	i chan struct{}
+	j []int
+	k uint
+}
+```
+这么多字段，会把结构体分为两个部分吗？不会，如果字段太多，就会退回原来的栈调用方式。使用下面的命令可以看见是否使用了寄存器调用。
+
+```shell
+go tool compile -S .\register_call.go
+```
+
+如果字段比较少，会使用寄存器调用
+
+// todo: 换成截图。
+```asm
+"".registerFunc STEXT nosplit size=136 args=0x30 locals=0x38 funcid=0x0 align=0x0
+        0x0000 00000 (.\register_call.go:7)     TEXT    "".registerFunc(SB), NOSPLIT|ABIInternal, $56-48
+        0x0000 00000 (.\register_call.go:7)     SUBQ    $56, SP
+        0x0004 00004 (.\register_call.go:7)     MOVQ    BP, 48(SP)
+        0x0009 00009 (.\register_call.go:7)     LEAQ    48(SP), BP
+        0x000e 00014 (.\register_call.go:7)     FUNCDATA        $0, gclocals·1c3ef612cf73709067014b2d0e4ffa70(SB)
+        0x000e 00014 (.\register_call.go:7)     FUNCDATA        $1, gclocals·0acea6cc8b9e2fc1c5d67d8ec44c988a(SB)
+        0x000e 00014 (.\register_call.go:7)     FUNCDATA        $5, "".registerFunc.arginfo1(SB)
+        0x000e 00014 (.\register_call.go:7)     MOVB    AL, "".registerStruct+64(SP)
+        0x0012 00018 (.\register_call.go:7)     MOVW    BX, "".registerStruct+66(SP)
+        0x0017 00023 (.\register_call.go:7)     MOVL    CX, "".registerStruct+68(SP)
+        0x001b 00027 (.\register_call.go:7)     MOVQ    DI, "".registerStruct+72(SP)
+        0x0020 00032 (.\register_call.go:7)     MOVQ    SI, "".registerStruct+80(SP)
+        0x0025 00037 (.\register_call.go:7)     MOVQ    R8, "".registerStruct+88(SP)
+        0x002a 00042 (.\register_call.go:7)     MOVQ    R9, "".registerStruct+96(SP)
+```
+
+而如果字段太多，则会退回栈调用。
+// todo: 换成截图。
+```asm
+"".registerFunc STEXT nosplit size=92 args=0xc0 locals=0x8 funcid=0x0 align=0x0
+        0x0000 00000 (.\register_call.go:7)     TEXT    "".registerFunc(SB), NOSPLIT|ABIInternal, $8-192
+        0x0000 00000 (.\register_call.go:7)     SUBQ    $8, SP
+        0x0004 00004 (.\register_call.go:7)     MOVQ    BP, (SP)
+        0x0008 00008 (.\register_call.go:7)     LEAQ    (SP), BP
+        0x000c 00012 (.\register_call.go:7)     FUNCDATA        $0, gclocals·31a07126bd45886e57ea99e2af0af812(SB)
+        0x000c 00012 (.\register_call.go:7)     FUNCDATA        $1, gclocals·69c1753bd5f81501d95132d08af04464(SB)
+        0x000c 00012 (.\register_call.go:7)     FUNCDATA        $5, "".registerFunc.arginfo1(SB)
+        0x000c 00012 (.\register_call.go:7)     LEAQ    "".~r0+112(SP), DI
+        0x0011 00017 (.\register_call.go:7)     PCDATA  $0, $-2
+        0x0011 00017 (.\register_call.go:7)     LEAQ    -32(DI), DI
+        0x0015 00021 (.\register_call.go:7)     NOP
+        0x0020 00032 (.\register_call.go:7)     DUFFZERO        $331
+        0x0033 00051 (.\register_call.go:8)     PCDATA  $0, $-1
+        0x0033 00051 (.\register_call.go:8)     LEAQ    "".~r0+112(SP), DI
+        0x0038 00056 (.\register_call.go:8)     LEAQ    "".registerStruct+16(SP), SI
+        0x003d 00061 (.\register_call.go:8)     PCDATA  $0, $-2
+```
 
 # 常用数据结构
 
@@ -863,7 +947,7 @@ m         *m      // go语言中线程的描述
 
 ```
 
-状态有下面几种：
+协程状态有下面几种：
 
 ```go
 const (
@@ -986,6 +1070,8 @@ type m struct {
 	locksHeld    [10]heldLockInfo
 }
 ```
+
+线程的状态只有：running和stop两种状态，如果m没有g可以运行了，就会陷入spinning状态，等待调度程序给一个g运行，如果找不到(`findrunnable()`函数没获取到g)，会stopm。
 
 调度器（**部分属性**）：
 
@@ -1211,7 +1297,7 @@ func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
 总结上面的步骤：
 
 1. 抢占m，获取当前的g（g0，因为切换到了g0栈上），禁止m被抢占。
-1. 从`gfree`获取g，如果没获取到就新建一个并且把状态改成_Gdead，并且如果newg没有栈，就新建一个**2k**的栈，把g添加到allgs中
+1. 从`gfree`获取g，如果没获取到就新建一个并且把状态改成_Gdead，并且如果newg没有栈，就新建一个**2kb**的栈，把g添加到allgs中
 1. 将调度器的sp指针指向goexit函数，这样在协程调度回来运行完成之后才会自动调用goexit()函数（因为这里存放的相当于是return addr,是下一条指令的地址），具体可以看https://cloud.tencent.com/developer/article/1836273
 1. 把g的状态从_GDead改成 _GRunnable，从而能放到当前p的本地队列。
 1. 释放m。
@@ -1340,6 +1426,10 @@ top:
 		gp, inheritTime = findrunnable()
 	}
 
+	if _g_.m.spinning {
+		resetspinning()
+	}
+
 	execute(gp, inheritTime)
 }
 ```
@@ -1350,7 +1440,9 @@ top:
 
 1. 检查p的timers，看是否有到时间的g能够运行。
 2. 寻找可以运行的g。
-3. 运行g。
+3. 如果当前的m在自旋，就唤醒
+4. 运行g。
+5. 执行结束之后，就会调用栈顶的`goexit()`函数退出协程。
 
 
 
@@ -1780,3 +1872,32 @@ type Mutex struct {
 读屏障：在屏障之后，从内存中读取的共享变量都是最新的数据。
 
 # 内存管理
+
+## 一些概念
+
+ref: https://learnku.com/articles/68142
+
+page: 和操作系统打交道的最小内存申请单位，大小为8kb.
+
+mspan: 由一个或者多个连续的page组成，内存管理的基本单元。
+
+arena: 把堆内存划分成一个个arena，arena中管理着8192个mspan。
+
+object：如果以page作为内存分配的单位，会造成内碎片和外碎片的问题，那就采用对对象分级的方法，给不同大小的对象分配不同的块。
+
+对象的大小：
+
+小对象：[0, 16B) 
+
+微对象：[16B, 32kb) 
+
+大对象：[32kb, +inf)
+
+sizeclass: 表示一块内存的规格，根据object的大小来分级，如1b - 8b大小之间的对象的sizeclass为1，8-16b之间为2，如此推断。go语言提供了67种规格的内存块。
+
+spanclass：因为span是内存管理的基本单位，内存管理就包括gc等，在gc时可以借助spanclass来看该span中的object是否需要扫描。
+
+
+## 内存模型
+
+每一个`p`都会被分配一个`mcache`，用于小对象和微对象的分配。
