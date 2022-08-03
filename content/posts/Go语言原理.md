@@ -844,7 +844,7 @@ func main() {
 
 `InterA`可以使用`StruA`的指针来初始化，也可以使用`StruA`的值来初始化，但是`StruA`并没有手动实现`InterA`指针方法`Fu`，这个是因为编译器在编译的时候，会自动生成一个指针类型的`Fu`方法，所以变量`c`才能使用指针来进行初始化。但是如果使用指针实现的接口方法，编译器并不会自动生成一个值实现的方法。
 
-![image-20220723231524293](E:\求职\总结\struct_编译器优化.png)
+![image-20220723231524293](struct_编译器优化.png)
 
 # 并发编程
 
@@ -1047,18 +1047,9 @@ type m struct {
 	libcallpc uintptr // for cpu profiler
 	libcallsp uintptr
 	libcallg  guintptr
-	syscall   libcall // stores syscall parameters on windows
 
-	vdsoSP uintptr // SP for traceback while in VDSO call (0 if not in call)
-	vdsoPC uintptr // PC for traceback while in VDSO call
-
-	// preemptGen counts the number of completed preemption
-	// signals. This is used to detect when a preemption is
-	// requested, but fails. Accessed atomically.
 	preemptGen uint32
 
-	// Whether this is a pending preemption signal on this M.
-	// Accessed atomically.
 	signalPending uint32
 
 	dlogPerM
@@ -1340,6 +1331,7 @@ type p struct {
 	runqtail uint32		// 指向协程队列的队尾指针
 	runq     [256]guintptr	// 当前线程的协程队列，最大256个协程
 	runnext guintptr	// 下一个可以执行的协程指针
+	mcache *mcache  // 堆内存的线程级别的分配器
 }
 ```
 
@@ -1357,6 +1349,7 @@ p也有几种状态：
 
 G-M-P模型的思想就是在每个线程中都保存一个协程队列，线程不直接和协程打交道，而是从p中取协程执行，如果p中的协程都被消费完了，p再从全局协程队列获取锁拿取一批协程放入本地队列，如果本地或者全局都没有协程了，则会去看其他线程有没有没执行完的协程，偷几个过来。
 
+p的个数是通过`GOMAXPROCS`参数来控制的，默认为cpu核心的个数。
 
 
 任务窃取调度器的缺点：
@@ -1525,7 +1518,7 @@ gopark的实现方式，是让协程休眠从`_Grunning`变为`_GWaiting`加入�
 
 #### 系统调用
 
-如果线程上的g陷入了系统调用，则该m也会陷入系统调用而阻塞，此时，会把原来附着的p解绑，并且把p上的m对象解绑，把p的状态改成`_Psyscall`。等待监控线程执行调度。
+如果线程上的g陷入了系统调用，则该m也会陷入系统调用而阻塞，此时，会把原来附着的p解绑，并且把p上的m对象解绑，把p的状态改成`_Psyscall`。等待**监控线程**执行调度。
 
 ```go
 func reentersyscall(pc, sp uintptr) {
@@ -1945,11 +1938,39 @@ object：如果以page作为内存分配的单位，会造成内碎片和外碎�
 
 大对象：[32kb, +inf)
 
-sizeclass: 表示一块内存的规格，根据object的大小来分级，如1b - 8b大小之间的对象的sizeclass为1，8-16b之间为2，如此推断。go语言提供了67种规格的内存块。
+sizeclass: 表示一块内存的规格，根据object的大小来分级，如1b - 8b大小之间的对象的sizeclass为1，8-16b之间为2，如此推断。go语言提供了68种规格的内存块。
 
 spanclass：因为span是内存管理的基本单位，内存管理就包括gc等，在gc时可以借助spanclass来看该span中的object是否需要扫描。
 
 
 ## 内存模型
 
-每一个`p`都会被分配一个`mcache`，用于小对象和微对象的分配。
+![](内存模型.png)
+
+### mcache
+
+每一个`p`都会被分配一个`mcache`，用于小对象和微对象的分配，因为每个p在同一时间只能运行一个m，所以不存在线程竞争的问题，所以m在向mcache申请内存的时候不会进行加锁操作。
+
+mcache中会管理着136(68 * 2，因为68个sizeClass * 是否需要gc)个mspan。并且根据spanClass进行对象的分级。
+
+对于spanClass为0或者为1（sizeClass == 0)的对象，会返回一个`zerobase`（上面在结构体提到过，不占内存）。
+
+```go
+type mcache struct {
+	nextSample uintptr 
+	scanAlloc  uintptr 
+	tiny       uintptr
+	tinyoffset uintptr
+	tinyAllocs uintptr
+
+
+	alloc [numSpanClasses]*mspan // spans to allocate from, indexed by spanClass
+
+	stackcache [_NumStackOrders]stackfreelist
+	flushGen uint32
+}
+```
+
+### mcentral
+
+如果mcache中的某个spanClass的span被填完了，则mcache会向mcentral申请对应spanClass的span。
