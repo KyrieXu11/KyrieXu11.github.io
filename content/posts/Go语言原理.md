@@ -1512,9 +1512,9 @@ gopark的实现方式，是让协程休眠从`_Grunning`变为`_GWaiting`加入�
 
 #### sysmon
 
-由`main goroutine`创建的系统监控线程，该m不需要依赖p，会定时调度，保证timers正常运作。
+由`main goroutine`创建的系统监控线程，**该m不需要依赖p**，会定时调度，保证timers正常运作。
 
-会调用`retake`
+会调用`retake`函数进而调用`schedule`函数。
 
 #### 系统调用
 
@@ -1525,20 +1525,9 @@ func reentersyscall(pc, sp uintptr) {
 	_g_ := getg()
 
 	_g_.stackguard0 = stackPreempt
-	_g_.throwsplit = true
 
-	// Leave SP around for GC and traceback.
-	save(pc, sp)
-	_g_.syscallsp = sp
-	_g_.syscallpc = pc
 	casgstatus(_g_, _Grunning, _Gsyscall)
-	if _g_.syscallsp < _g_.stack.lo || _g_.stack.hi < _g_.syscallsp {
-		systemstack(func() {
-			print("entersyscall inconsistent ", hex(_g_.syscallsp), " [", hex(_g_.stack.lo), ",", hex(_g_.stack.hi), "]\n")
-			throw("entersyscall")
-		})
-	}
-
+    
 	if atomic.Load(&sched.sysmonwait) != 0 {
 		systemstack(entersyscall_sysmon)
 		save(pc, sp)
@@ -1552,10 +1541,12 @@ func reentersyscall(pc, sp uintptr) {
 
 	_g_.m.syscalltick = _g_.m.p.ptr().syscalltick
 	_g_.sysblocktraced = true
+    
 	pp := _g_.m.p.ptr()
 	pp.m = 0
 	_g_.m.oldp.set(pp)
 	_g_.m.p = 0
+    
 	atomic.Store(&pp.status, _Psyscall)
 	if sched.gcwaiting != 0 {
 		systemstack(entersyscall_gcwait)
@@ -1974,3 +1965,18 @@ type mcache struct {
 ### mcentral
 
 如果mcache中的某个spanClass的span被填完了，则mcache会向mcentral申请对应spanClass的span。
+
+mcentral维护两个`spanset`，一个维护全部空闲的Span集合；一个维护存在非空闲的Span集合；mcache向mcentral申请span时，**需要加锁**。
+
+```go
+type mcentral struct {
+	spanclass spanClass
+	partial [2]spanSet // 全部空闲的span集合，分为两种，清理和未清理的
+	full    [2]spanSet // 存在非空闲的span集合，分为两种，清理和未清理的
+}
+```
+
+mcache向mcentral申请内存的过程：
+
+1. 先向空闲的，清理的partial申请，如果没有就从未清理的，空闲的partial申请。
+2. 
