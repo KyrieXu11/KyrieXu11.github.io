@@ -402,7 +402,7 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
     // 计算hash种子
 	h.hash0 = fastrand()
 
-    // make的时候传递的值，hint < bucketCnt(8)的时候会返回false
+    // make的时候传递的值，hint < bucketCnt（8）的时候会返回false
 	B := uint8(0)
 	for overLoadFactor(hint, B) {
 		B++
@@ -479,7 +479,7 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 
 ### 写入
 
-和读取的流程一样，只不过
+和读取的流程一样，只不过当oldbuckets存在时，需要进行扩容；并且如果hash冲突到需要新建一个溢出桶，则需要新建溢出桶。
 
 ### 扩容
 
@@ -496,7 +496,7 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
 
 扩容的类型分为两种：翻倍扩容和等量扩容
 
-等量扩容：溢出桶太多了。普通桶的数量不翻倍，去整理溢出桶。
+等量扩容：溢出桶太多了。普通桶的数量不翻倍，去创建新的溢出桶，
 
 翻倍扩容：新建普通桶。
 
@@ -504,7 +504,7 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
 
 等量扩容步骤：
 
-和下面的步骤一样，只不过是不会创建新的
+和下面的步骤一样，只不过是不会创建新的buckets，而是会创建新的overflowbucket
 
 ```go
 func hashGrow(t *maptype, h *hmap) {
@@ -1175,6 +1175,14 @@ TEXT runtime·rt0_go(SB),NOSPLIT|TOPFRAME,$0
 
 [G0的作用](https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8)：其实就是运行schedule()，m上的g变为_GWaiting了之后，会切换到g0执行调度寻找g。
 
+总结：
+
+1. 初始化g0栈。
+2. 设置m0和g0互引用的关系。
+3. 调用schedinit初始化调度。
+4. 启动main-goroutine，调用runtime.main。
+5. 启动一个线程用来调度。
+
 ### 创建新协程经历了什么
 
 前置知识：[调用栈](#调用栈)
@@ -1188,6 +1196,8 @@ TEXT runtime·rt0_go(SB),NOSPLIT|TOPFRAME,$0
 `allgs`：所有的协程，包括状态为`_Gdead`，所以不会减小。
 
 `sched`：记录了所有状态为`_Grunnable`的协程的`runq`，并且记录了空闲的p和空闲的m。
+
+`gfree`：可以复用的g（status=_GDead）。
 
 在1.18下调用newproc函数需要传递一个参数，那就是函数的指针。所以在函数调用栈中会传递函数的指针。
 
@@ -1506,7 +1516,7 @@ TEXT gogo<>(SB), NOSPLIT, $0
 
 #### gopark
 
-gopark的实现方式，是让协程休眠从`_Grunning`变为`_GWaiting`加入到p中的timers函数中，然后在调度的时候，会调用`checktimers`函数，唤醒那些在`_GWaiting`的g。
+`time.Sleep`，是让协程休眠从`_Grunning`变为`_GWaiting`加入到p中的timers函数中，然后在调度的时候，会调用`checktimers`函数，唤醒那些在`_GWaiting`的g。
 
 万一所有的线程都在忙，无法触发调度，那该怎么唤醒呢？
 
@@ -1621,6 +1631,12 @@ channel底层实现的方式为环形数组。
 写入数据到channel是调用`chansend`，下面是该函数的部分。
 
 可以看见，在channel关闭之后，是不让写数据进去的，直接抛出panic。
+
+1. 在发送的时候，会从recvq队列（如果这个队列中有，代表该receiver已经阻塞了）中取出一个receiver。
+2. 如果没有receiver，就看缓冲区能不能放数据，如果放不了就阻塞sender，把sender放入senq中。阻塞是调用gopark，把g的状态改成_Gwaiting。
+3. 如果有receiver，在send的时候把数据直接拷贝到receiver的elem中。
+4. 调用goready把receiver的状态改会_GRunnable。
+
 ```go
 func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
@@ -1635,6 +1651,7 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 		panic(plainError("send on closed channel"))
 	}
 
+    // 注意看，这里是recvq
 	if sg := c.recvq.dequeue(); sg != nil {
 		send(c, sg, ep, func() { unlock(&c.lock) }, 3)
 		return true
@@ -1665,12 +1682,29 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 	gp.waiting = mysg
 	gp.param = nil
 	c.sendq.enqueue(mysg)
+    
 	gopark(chanparkcommit, unsafe.Pointer(&c.lock), waitReasonChanSend, traceEvGoBlockSend, 2)
-	gp.activeStackChans = false
+	
+    gp.activeStackChans = false
 	closed := !mysg.success
 	mysg.c = nil
 	releaseSudog(mysg)
 	return true
+}
+
+func send(c *hchan, sg *sudog, ep unsafe.Pointer, unlockf func(), skip int) {
+	if sg.elem != nil {
+		sendDirect(c.elemtype, sg, ep)
+		sg.elem = nil
+	}
+	gp := sg.g
+	unlockf()
+	gp.param = unsafe.Pointer(sg)
+	sg.success = true
+	if sg.releasetime != 0 {
+		sg.releasetime = cputicks()
+	}
+	goready(gp, skip+1)
 }
 ```
 
@@ -1680,7 +1714,9 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
 可以看见在channel close情况下，如果缓冲区还有数据残留，则消费者可以继续从缓冲区消费，而不会panic。
 
-如果channel阻塞了会调用gopark函数让出协程，触发调度。
+1. 在接收时，会从sendq中获取一个sender（此时一定是_GWaiting）。
+2. 如果没获取到sender，就从缓冲区复制到接收对象，如果缓冲区的数据都消费完了，则会阻塞receiver。
+3. 如果获取到了sender，如果channel是非缓冲的，直接从sender中获取数据。如果channel是缓冲的，首先从缓冲区拷贝数据到接收对象，然后再从sender复制的数据拷贝到接收对象。调用goready的状态改为_GRunnable.
 
 ```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
@@ -1706,6 +1742,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 		return true, false
 	}
 
+    // 这里是sendq
 	if sg := c.sendq.dequeue(); sg != nil {
 		recv(c, sg, ep, func() { unlock(&c.lock) }, 3)
 		return true, true
@@ -1742,6 +1779,35 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 	gp.param = nil
 	releaseSudog(mysg)
 	return true, success
+}
+
+func recv(c *hchan, sg *sudog, ep unsafe.Pointer, unlockf func(), skip int) {
+	if c.dataqsiz == 0 {
+		if ep != nil {
+			// copy data from sender
+			recvDirect(c.elemtype, sg, ep)
+		}
+	} else {
+		qp := chanbuf(c, c.recvx)
+		if ep != nil {
+			typedmemmove(c.elemtype, ep, qp)
+		}
+		typedmemmove(c.elemtype, qp, sg.elem)
+		c.recvx++
+		if c.recvx == c.dataqsiz {
+			c.recvx = 0
+		}
+		c.sendx = c.recvx // c.sendx = (c.sendx+1) % c.dataqsiz
+	}
+	sg.elem = nil
+	gp := sg.g
+	unlockf()
+	gp.param = unsafe.Pointer(sg)
+	sg.success = true
+	if sg.releasetime != 0 {
+		sg.releasetime = cputicks()
+	}
+	goready(gp, skip+1)
 }
 ```
 
@@ -1903,11 +1969,51 @@ type Mutex struct {
 
 弱三色不变式：黑色所指向的白色对象，必须包含一个灰色对象指向该白色对象。
 
-写屏障：在屏障之前，对共享变量的改动都会同步到主存中。
+#### 满足两个不变式的实现
 
-读屏障：在屏障之后，从内存中读取的共享变量都是最新的数据。
+~~写屏障：在屏障之前，对共享变量的改动都会同步到主存中。~~
+
+~~读屏障：在屏障之后，从内存中读取的共享变量都是最新的数据。~~
+
+##### 插入写屏障
+
+插入写屏障：在a引用b时，把b标记成灰色。满足强三色不变式。
+
+举个例子：
+
+假设a是栈上的root所指向的对象。
+
+![](插入写屏障.png)
+
+在上图中，第二个图用户程序突然改变了a的引用关系，但是此时由于插入写屏障，所以c对象的颜色被调整为灰色。
+
+但是如果a指针指向了c，则b应该要清理才能节约内存，但是b为黑色，不能清理，所以需要**对栈上的对象stw**从栈开始从新扫描把b给清理掉。
+
+##### 删除写屏障
+
+被删除引用对象，如果自身是白色或者灰色，则置为灰色。满足了弱三色不变式。
+
+说人话就是要删除灰色到白色引用时，把被删除的引用对象置为灰色，这样就不会有黑色指向白色的情况了。
+
+![](删除写屏障.png)
+
+在第三个图中，触发了删除写屏障，c被置为了灰色，但是b也没有删除。
+
+##### 混合写屏障
+
+1. gc开始时，栈上的所有对象可达的所有对象都标记为黑色，期间在栈上新增的对象也都标记成黑色。
+2. gc时被删除的对象标记为灰色。
+3. gc时被添加的对象标记为灰色。
+
+
 
 # 内存管理
+
+## 逃逸分析
+
+会分析函数内变量生命周期是否超出了函数，如果超出则放入堆。
+
+多级间接赋值会导致逃逸：如data.Key = value，key为引用类型，则value一定会逃逸。
 
 ## 一些概念
 
@@ -1923,15 +2029,26 @@ object：如果以page作为内存分配的单位，会造成内碎片和外碎�
 
 对象的大小：
 
-小对象：[0, 16B) 
+微对象：[0, 16B) 
 
-微对象：[16B, 32kb) 
+小对象：[16B, 32kb) 
 
 大对象：[32kb, +inf)
 
-sizeclass: 表示一块内存的规格，根据object的大小来分级，如1b - 8b大小之间的对象的sizeclass为1，8-16b之间为2，如此推断。go语言提供了68种规格的内存块。
+sizeclass: 表示一块内存的规格，根据object的大小来分级，如1b - 8b大小之间的对象的sizeclass为1，8-16b之间为2，如此推断。go语言提供了**67**种规格的内存块。
 
-spanclass：因为span是内存管理的基本单位，内存管理就包括gc等，在gc时可以借助spanclass来看该span中的object是否需要扫描。
+spanclass：因为span是内存管理的基本单位，内存管理就包括gc等，在gc时可以借助spanclass来看该span中的object是否需要扫描（如果是指针类型则需要扫描）。其中，spanClass和sizeClass的关系是：
+
+```go
+func makeSpanClass(sizeclass uint8, noscan bool) spanClass {
+	return spanClass(sizeclass<<1) | spanClass(bool2int(noscan))
+}
+
+//假如sizeClass = 1 noscan = true => spanClass = 3
+//假如sizeClass = 1 noscan = false => spanClass = 2
+```
+
+
 
 
 ## 内存模型
@@ -1940,22 +2057,24 @@ spanclass：因为span是内存管理的基本单位，内存管理就包括gc�
 
 ### mcache
 
-每一个`p`都会被分配一个`mcache`，用于小对象和微对象的分配，因为每个p在同一时间只能运行一个m，所以不存在线程竞争的问题，所以m在向mcache申请内存的时候不会进行加锁操作。
+每一个`p`都会被分配一个`mcache`，用于**微对象和小对象**（对象大小<32kb）的分配，因为每个p在同一时间只能运行一个m，所以不存在线程竞争的问题，所以m在向mcache申请内存的时候不会进行加锁操作。
 
 mcache中会管理着136(68 * 2，因为68个sizeClass * 是否需要gc)个mspan。并且根据spanClass进行对象的分级。
 
 对于spanClass为0或者为1（sizeClass == 0)的对象，会返回一个`zerobase`（上面在结构体提到过，不占内存）。
 
+但是要注意的是，如果是微对象，会在tiny内存上去获取span。
+
 ```go
 type mcache struct {
 	nextSample uintptr 
 	scanAlloc  uintptr 
-	tiny       uintptr
+	tiny       uintptr  // tiny内存
 	tinyoffset uintptr
 	tinyAllocs uintptr
 
 
-	alloc [numSpanClasses]*mspan // spans to allocate from, indexed by spanClass
+	alloc [numSpanClasses]*mspan // numSpanClasses = 68 << 1
 
 	stackcache [_NumStackOrders]stackfreelist
 	flushGen uint32
@@ -1964,19 +2083,107 @@ type mcache struct {
 
 ### mcentral
 
-如果mcache中的某个spanClass的span被填完了，则mcache会向mcentral申请对应spanClass的span。
+如果mcache中的某个spanClass的span被填完了，则mcache会向**mheap**中对应的spanClass的**mcentral**申请span。
 
 mcentral维护两个`spanset`，一个维护全部空闲的Span集合；一个维护存在非空闲的Span集合；mcache向mcentral申请span时，**需要加锁**。
 
 ```go
 type mcentral struct {
-	spanclass spanClass
+	spanclass spanClass // spanClass级别
 	partial [2]spanSet // 全部空闲的span集合，分为两种，清理和未清理的
-	full    [2]spanSet // 存在非空闲的span集合，分为两种，清理和未清理的
+	full    [2]spanSet // 不包含空闲对象的span集合，分为两种，清理和未清理的
 }
 ```
 
 mcache向mcentral申请内存的过程：
 
-1. 先向空闲的，清理的partial申请，如果没有就从未清理的，空闲的partial申请。
-2. 
+1. 先向空闲的，清理的partial申请mspan，如果没有就从未清理的，空闲的partial申请mspan。
+2. 如果上面的partial中找不到，就去未清理的有空闲的full中申请，如果申请到了mspan，则清理这个mspan。前面两个步骤中，如果申请到了，将span从对应的队列中pop，返回。
+3. 如果上面的都没找到空闲mspan，触发扩容从堆中申请新的内存，这个时候会从heaparena中申请。
+
+下面是上面的步骤的源码（节选）：
+
+```go
+func (c *mcentral) cacheSpan() *mspan {
+	sg := mheap_.sweepgen
+	spanBudget := 100
+
+	var s *mspan
+	if s = c.partialSwept(sg).pop(); s != nil {
+		goto havespan
+	}
+
+    // partial
+	for ; spanBudget >= 0; spanBudget-- {
+		s = c.partialUnswept(sg).pop()
+		if s == nil {
+			break
+		}
+		if atomic.Load(&s.sweepgen) == sg-2 && atomic.Cas(&s.sweepgen, sg-2, sg-1) {
+			s.sweep(true)
+			goto havespan
+		}
+	}
+    
+    // full队列中
+    for ; spanBudget >= 0; spanBudget-- {
+		s = c.fullUnswept(sg).pop()
+		if s == nil {
+			break
+		}
+		if atomic.Load(&s.sweepgen) == sg-2 && atomic.Cas(&s.sweepgen, sg-2, sg-1) {
+			s.sweep(true)
+			freeIndex := s.nextFreeIndex()
+			if freeIndex != s.nelems {
+				s.freeindex = freeIndex
+				goto havespan
+			}
+			c.fullSwept(sg).push(s)
+		}
+	}
+    
+    // 上面两个阶段都没获取到空闲mspan
+    s = c.grow()
+	if s == nil {
+		return nil
+	}
+    
+havespan:
+	freeByteBase := s.freeindex &^ (64 - 1)
+	whichByte := freeByteBase / 8
+    
+	s.refillAllocCache(whichByte)
+	s.allocCache >>= s.freeindex % 64
+	return s
+}
+```
+
+### mheap
+
+数据结构（节选）：
+
+```go
+mheap struct {
+	lock  mutex
+	pages pageAlloc // page allocation data structure
+	sweepgen uint32 // sweep generation, see comment in mspan; written during STW
+	allspans []*mspan // all spans out there
+	pagesInUse         atomic.Uint64 // pages of spans in stats mSpanInUse
+	pagesSwept         atomic.Uint64 // pages swept this cycle
+	arenas [1 << arenaL1Bits]*[1 << arenaL2Bits]*heapArena
+	
+    // numSpanClasses = 68 << 1
+	central [numSpanClasses]struct {  
+		mcentral mcentral
+		pad      [cpu.CacheLinePadSize - unsafe.Sizeof(mcentral{})%cpu.CacheLinePadSize]byte
+	}
+}
+```
+
+## 内存分配
+
+总结一句话，微小对象(**不可以是指针类型**)[0, 16b) ，依次在mcache上的tiny指针、span数组、mcentral中的span数组空间申请，如果tiny对象放满了，或者后来的对象没位置放，就会从mcache中的span数组申请一个16b大小的内存空间，如果新的内存空间比原来剩下的那个tiny内存空间还大，就会用新的替换原来的。（有一个问题，原来的去哪了？）
+
+小对象[16b, 32k) 在mcache的span数组申请，如果mcache中对应spanClass的槽位没了（相同spanclass的span太多了，被申请完了），mcache向mheap中的mcentral申请对应spanClass的span。
+
+大对象直接通过mheap申请heaparena中的span，如果arena中没有，直接申请操作系统中的内存。
