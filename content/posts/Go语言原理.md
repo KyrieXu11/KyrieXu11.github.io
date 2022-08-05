@@ -112,7 +112,6 @@ go tool compile -S .\register_call.go
 
 如果字段比较少，会使用寄存器调用
 
-// todo: 换成截图。
 ```asm
 "".registerFunc STEXT nosplit size=136 args=0x30 locals=0x38 funcid=0x0 align=0x0
         0x0000 00000 (.\register_call.go:7)     TEXT    "".registerFunc(SB), NOSPLIT|ABIInternal, $56-48
@@ -132,7 +131,6 @@ go tool compile -S .\register_call.go
 ```
 
 而如果字段太多，则会退回栈调用。
-// todo: 换成截图。
 ```asm
 "".registerFunc STEXT nosplit size=92 args=0xc0 locals=0x8 funcid=0x0 align=0x0
         0x0000 00000 (.\register_call.go:7)     TEXT    "".registerFunc(SB), NOSPLIT|ABIInternal, $8-192
@@ -1504,6 +1502,8 @@ TEXT gogo<>(SB), NOSPLIT, $0
 
 ### 调度时机
 
+https://segmentfault.com/a/1190000040405826
+
 ![go调度时机](go调度时机.png)
 
 1. 主动调用`gopark()`，如time.Sleep()底层调用了`gopark`。
@@ -1520,15 +1520,28 @@ TEXT gogo<>(SB), NOSPLIT, $0
 
 万一所有的线程都在忙，无法触发调度，那该怎么唤醒呢？
 
+监控线程会检查这些timer，让到时间的g能够放入等待队列中。
+
 #### sysmon
 
 由`main goroutine`创建的系统监控线程，**该m不需要依赖p**，会定时调度，保证timers正常运作。
 
 会调用`retake`函数进而调用`schedule`函数。
 
+监控线程的调度职责：
+
+1. 监控协程运行时间是否过长，如果过长，把stackguard0设置为`stackpreemt`会调用morestack函数触发调度.
+2. 如果p距离上次的系统调用时间过长，则会把p修改成空闲的状态，并且指派一个m给p，让m运行g。
+
 #### 系统调用
 
-如果线程上的g陷入了系统调用，则该m也会陷入系统调用而阻塞，此时，会把原来附着的p解绑，并且把p上的m对象解绑，把p的状态改成`_Psyscall`。等待**监控线程**执行调度。
+如果线程上的g陷入了系统调用，则该m也会陷入系统调用而阻塞，此时，会把原来附着的p解绑，并且把p上的m对象解绑，把p的状态改成`_Psyscall`。等待**监控线程**给这个p做一些操作，如监控p陷入了系统调用时间是否太长，如果太长则会和一个m绑定（无论是从`midle`还是新建一个m）来运行g。
+
+在结束系统调用的时候，操作系统会调用`exitsyscall`回调函数
+
+如果系统调用结束的很快，则会判断原来的p是否还在等待（_PSyscall），如果还在等待，则将系统调用返回的m和该p绑定。
+
+如果原来的p不能用了，将g放入**全局**等待队列。
 
 ```go
 func reentersyscall(pc, sp uintptr) {
@@ -1542,16 +1555,8 @@ func reentersyscall(pc, sp uintptr) {
 		systemstack(entersyscall_sysmon)
 		save(pc, sp)
 	}
-
-	if _g_.m.p.ptr().runSafePointFn != 0 {
-		// runSafePointFn may stack split if run on this stack
-		systemstack(runSafePointFn)
-		save(pc, sp)
-	}
-
-	_g_.m.syscalltick = _g_.m.p.ptr().syscalltick
-	_g_.sysblocktraced = true
     
+    // 记录oldp
 	pp := _g_.m.p.ptr()
 	pp.m = 0
 	_g_.m.oldp.set(pp)
@@ -1564,6 +1569,41 @@ func reentersyscall(pc, sp uintptr) {
 	}
 
 	_g_.m.locks--
+}
+```
+
+```go
+func exitsyscall0(gp *g) {
+	casgstatus(gp, _Gsyscall, _Grunnable)
+	dropg()
+	lock(&sched.lock)
+	var _p_ *p
+	if schedEnabled(gp) {
+		_p_ = pidleget()
+	}
+	var locked bool
+	if _p_ == nil {
+		globrunqput(gp)
+		locked = gp.lockedm != 0
+	} else if atomic.Load(&sched.sysmonwait) != 0 {
+		atomic.Store(&sched.sysmonwait, 0)
+		notewakeup(&sched.sysmonnote)
+	}
+	unlock(&sched.lock)
+	if _p_ != nil {
+		acquirep(_p_)
+		execute(gp, false) // Never returns.
+	}
+	if locked {
+		// Wait until another thread schedules gp and so m again.
+		//
+		// N.B. lockedm must be this M, as this g was running on this M
+		// before entersyscall.
+		stoplockedm()
+		execute(gp, false) // Never returns.
+	}
+	stopm()
+	schedule() // Never returns.
 }
 ```
 
