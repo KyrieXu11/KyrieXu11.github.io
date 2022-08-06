@@ -844,6 +844,14 @@ func main() {
 
 ![image-20220723231524293](struct_编译器优化.png)
 
+
+
+# defer
+
+defer的原理就是把defer的函数封装成一个对象放入当前协程的defer链表表头（头插法），这样才会有后声明的defer先执行。
+
+
+
 # 并发编程
 
 ## 协程
@@ -1401,8 +1409,6 @@ _StackBig < framesize，也会执行栈增长，此时会将`stackguard0`设置�
 ```go
 func schedule() {
 	_g_ := getg()
-    
-    
 
 top:
     pp := _g_.m.p.ptr()
@@ -1457,8 +1463,8 @@ top:
 
 1. 从本地队列找。
 2. 去全局队列找。
-3. netpoll中找。
-4. 去其他其他随机的p中偷。
+3. 去其他其他随机的p中偷。
+4. netpoll中找。
 
 #### 运行g
 
@@ -1528,7 +1534,7 @@ https://segmentfault.com/a/1190000040405826
 
 会调用`retake`函数进而调用`schedule`函数。
 
-监控线程的调度职责：
+监控线程的**调度职责**：
 
 1. 监控协程运行时间是否过长，如果过长，把stackguard0设置为`stackpreemt`会调用morestack函数触发调度.
 2. 如果p距离上次的系统调用时间过长，则会把p修改成空闲的状态，并且指派一个m给p，让m运行g。
@@ -1698,8 +1704,9 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 	}
 
 	if c.qcount < c.dataqsiz {
-		// Space is available in the channel buffer. Enqueue the element to send.
 		qp := chanbuf(c, c.sendx)
+        // 拷贝数据到缓冲区
+		typedmemmove(c.elemtype, qp, ep)
 		c.sendx++
 		if c.sendx == c.dataqsiz {
 			c.sendx = 0
@@ -1789,8 +1796,12 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 	}
 
 	if c.qcount > 0 {
-		// Receive directly from queue
 		qp := chanbuf(c, c.recvx)
+        // 从缓冲区拷贝数据到接收对象
+        if ep != nil {
+			typedmemmove(c.elemtype, ep, qp)
+		}
+        typedmemclr(c.elemtype, qp)
 		c.recvx++
 		if c.recvx == c.dataqsiz {
 			c.recvx = 0
