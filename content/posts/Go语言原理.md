@@ -332,6 +332,47 @@ https://juejin.cn/post/7101928883280150558
 
 ![image-20220723142302761](切片扩容规则_1.18.png)
 
+扩容都是创建一个新的数组，把原来数组中的元素拷贝到新数组中，并且sliceheader中的指针指向了新的数组。
+
+
+
+##### 扩容与函数调用
+
+可以参考：https://juejin.cn/post/6844904177022271501
+
+```go
+func main() {
+	slice := make([]int, 2, 3)
+	for i := 0; i < len(slice); i++ {
+		slice[i] = i
+	}
+
+    // f1-before call: slice: [0 1], data addr: 0xc00000a150 variable addr:0xc000004078 
+	fmt.Printf("f1-before call: slice: %v, data addr: %p variable addr:%p \n", slice, slice, &slice) 
+	changeSlice(slice)
+    // f1-before call: slice: [0 1], data addr: 0xc00000a150 variable addr:0xc000004078
+	fmt.Printf("f1-before call: slice: %v, data addr: %p variable addr:%p \n", slice, slice, &slice)
+}
+
+func changeSlice(s []int) {
+    // f2-infunc: func s: [0 1], data addr: 0xc00000a150 variable addr:0xc0000040c0
+	fmt.Printf("f2-infunc: func s: %v, data addr: %p variable addr:%p \n", s, s, &s)
+	s = append(s, 3)
+	s = append(s, 4)
+	s[1] = 111
+    // f2-infunc: func s: [0 111 3 4], data addr: 0xc00000c420 variable addr:0xc0000040c0
+	fmt.Printf("f2-infunc: func s: %v, data addr: %p variable addr:%p \n", s, s, &s) 
+}
+```
+
+正常的在函数内部更改值`s[1] = 111`，是能够改变值的（因为函数调用时传递了切片所指向堆的地址），但是由于扩容的机制，s的底层指针指向了一个新的数组，所以导致修改的时候，修改的是扩容之后指向的数组中的值，所以才会出现执行完`changeSlice`之后，输出的切片还是原来的切片。
+
+总结一下：
+
+1. 切片传参的时候，传递的是切片对象的指针（地址）。
+2. 添加元素的时候，append会更改sliceheader中的len，但是由于值传递，所以实参不能发现len被修改了。
+3. append的时候，如果扩容了，则在扩容完成之后的切片修改操作，对实参不可见。
+
 ## map
 
 ### 数据结构
