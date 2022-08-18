@@ -1804,7 +1804,7 @@ func send(c *hchan, sg *sudog, ep unsafe.Pointer, unlockf func(), skip int) {
 
 1. 在接收时，会从sendq中获取一个sender（此时一定是_GWaiting）。
 2. 如果没获取到sender，就从缓冲区复制到接收对象，如果缓冲区的数据都消费完了，则会阻塞receiver。
-3. 如果获取到了sender，如果channel是非缓冲的，直接从sender中获取数据。如果channel是缓冲的，首先从缓冲区拷贝数据到接收对象，然后再从sender复制的数据拷贝到接收对象。调用goready的状态改为_GRunnable.
+3. 如果获取到了sender，如果channel是非缓冲的，直接从sender中获取数据。如果channel是缓冲的，首先从缓冲区拷贝数据到接收对象，然后再从sender复制的数据拷贝到接收对象。调用goready把sender的状态改为_GRunnable.
 
 ```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
