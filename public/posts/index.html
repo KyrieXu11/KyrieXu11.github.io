@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Secret Room of KyrieXu11</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.102.0-DEV" />
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+    
+    
+      
+
+    
+
+    
+    
+      <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="Secret Room of KyrieXu11" />
+      <link href="/posts/index.xml" rel="feed" type="application/rss+xml" title="Secret Room of KyrieXu11" />
+      
+    
+    
+    <meta property="og:title" content="Posts" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://kyriexu11.github.io/posts/" />
+
+<meta itemprop="name" content="Posts">
+<meta itemprop="description" content=""><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Posts"/>
+<meta name="twitter:description" content=""/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Secret Room of KyrieXu11
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          Posts
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="pa3 pa4-ns nested-copy-line-height">
+    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy mid-gray"></section>
+    <section class="flex-ns flex-wrap justify-around mt5">
+      
+        <div class="relative w-100 w-30-l mb4 bg-white">
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/go%E8%AF%AD%E8%A8%80%E5%8E%9F%E7%90%86/" class="link black dim">
+        Go语言原理
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      函数调用 栈调用 栈的地址是由上到下从高地址到低地址的。
+go语言的函数调用栈从栈基础地址开始，依次填入局部变量、调用的目标函数的返回值和参数。如果函数有多个参数和返回值是从代码顺序的右到左依次压入栈。
+返回地址是下一条指令的地址，函数执行完之后会跳转到这里。
+并且go语言分配栈空间是一次性分配最大的所需栈空间，因为栈空间在编译期间就可确定，所以可以通过后面要说的morestack进行检测，如果分配的不够则会进行栈增长，另外的开辟一块足够大的栈空间，把原来栈上的数据拷贝到新的空间。
+举个例子
+func incrNumB(a int) int { var b int defer func() { a++ b++ }() a++ b = a return b } func main() { var a = 0 b := incrNumB(a) fmt.Println(a, b) // 输出 0 1 } 在defer函数执行之前，会先给返回值赋值，也就是先给栈上的返回值区域先赋值从0变为1，再执行defer函数。
+func incrNumB1(a int) (b int) { defer func() { a++ b++ }() a++ b = a return b } func main() { var a = 0 b := incrNumB1(a) fmt.
+    </div>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="relative w-100 w-30-l mb4 bg-white">
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/es/" class="link black dim">
+        
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      mapping
+    </div>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="relative w-100 w-30-l mb4 bg-white">
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/mysql%E5%8E%9F%E7%90%86/" class="link black dim">
+        
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      执行结构 总体分为两个部分：
+server 和 执行引擎
+server 连接器-&gt;分析器-&gt;优化器-&gt;执行器。
+连接器：负责管理连接。超时断开、用户密码校验。
+分析器：词法分析。
+优化器：优化查询。
+执行器：执行语句，权限校验。
+执行引擎 常见的有innodb和myaism。
+redolog和binlog redolog redolog为innodb实现的。
+对数据库做的更新操作不直接写入磁盘，而是通过write ahead log的技术写入redolog。在空闲的时候，把redolog中的改动同步到磁盘。
+图源：https://blog.csdn.net/weixin_43213517/article/details/117457184
+为什么需要redolog？ innodb是以页的方式来管理存储空间的，在进行增删改的时候，需要把记录所在的整个页加载到buffer pool（内存）中，在内存做完写操作之后，再进行刷盘，刷盘为随机IO，开销太大。
+redolog如何持久化 刷盘时机 后台定时刷盘。 用户commit时。 两个指针 write position和checkpoint。
+redolog为环形log，当wp追上了checkpoint，就要刷盘了，这个时候把checkpoint往前推进，才可以继续写。
+binlog binlog为server的日志，不归属任何执行引擎，所有执行引擎都可以用。
+和redolog有几点不同：
+binlog为逻辑日志，而redolog为物理日志。binlog会记录下“给哪一行更新id=2”，而redolog会记录下“在哪个数据页的哪一行进行修改”。 redolog循环写，空间会用完，binlog为追加写，理论上无限大。 两阶段写 总体和分布式事务一个思想，以更新为例子：
+执行器找执行引擎取目标记录，执行引擎用树来找这一条记录，如果在内存则直接返回，如果不在内存，则将该记录所在的整个页加载到内存，再返回。 执行器在内存更新完成该记录，再调用引擎的接口写入这行数据。 执行引擎在内存中更新这条数据，并且把更新记录写入redolog，把redolog的状态置为prepare状态，并且告知执行器可以写binlog。 执行器写binlog，把binlog写入磁盘。 执行器再调用执行引擎的接口把redolog的状态改为commit。 如果在写的时候出现的crash，该怎么恢复？
+如果redolog中的事务是完整的（有commit标识），则直接commit。 如果redolog只有prepare，则去看binlog事务是否完整。 如果binlog存在事务并且完整，则改redolog为commit，然后commit事务。 如果binlog事务不完整，则直接回滚。 事务 事务会出现的问题 脏读（读取未提交数据）
+不可重复读（前后多次读取，数据内容不一致）
+幻读（前后多次读取，数据总量不一致）
+简单给个实例：
+A B start transaction with consistent snapshot select * from t0; // 没有id为4的行 insert into t0(id, k) values(4,4);// 插入成功 insert into t0(id, k) values(4,4); // 报错了。ERROR 1062 (23000): Duplicate entry &lsquo;4&rsquo; for key &rsquo;t0.
+    </div>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="relative w-100 w-30-l mb4 bg-white">
+          <div class="relative w-100 mb4 bg-white nested-copy-line-height">
+  <div class="bg-white mb3 pa4 gray overflow-hidden">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/%E7%AE%97%E6%B3%95%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="link black dim">
+        
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      基础算法 快速排序 背模板，避免边界问题出现。
+快速排序的算法思想是（从小到大排序）：
+选定一个哨兵元素，从左往右扫描，直到找到第一个比这个数大的数之后，从右往左扫描，直到找到第一个比这个数要小的数。 如果左边的指针小于右边的指针，交换两个指针指向的数。 重复上面的步骤，直到左边的指针大于右边的指针。 public static void quickSort(int[] nums) { quickSort(nums, 0, nums.length - 1); } private static void quickSort(int[] nums, int l, int r) { if (l &gt;= r) { return; } // 由于选取的第一个数为哨兵节点，所以i = l - 1，为了统一，j也写成r + 1 int x = nums[l], i = l - 1, j = r + 1; while (i &lt; j) { while (nums[++i] &lt; x) ; while (nums[--j] &gt; x) ; // 从i出发找到比x大的数，从j出发找到比x小的数，交换 if (i &lt; j) { swap(nums, i, j); } } // 注意边界 quickSort(nums, l, j); quickSort(nums, j + 1, r); } private static void swap(int[] nums, int i, int j) { int tmp = nums[i]; nums[i] = nums[j]; nums[j] = tmp; } 快速选择 public static int quickSelect(int[] nums, int k, int l, int r) { if (l &gt;= r) { return nums[l]; } int x = nums[l], i = l - 1, j = r + 1; while (i &lt; j) { while (nums[++i] &lt; x) ; while (nums[--j] &gt; x) ; if (i &lt; j) { swap(nums, i, j); } } // 如果k落在分区的左边，则就是找左边分区第k小的数字 if (j - l + 1 &gt;= k) { return quickSelect(nums, k, l, j); } // 如果落在了右边的分区，则找右边分区第 k - (j - l + 1) 小的数字 return quickSelect(nums, k - (j - l + 1), j + 1, r); } 归并排序 和快速排序一样，背模板，避免造成边界问题。 算法思想是：
+    </div>
+  </div>
+</div>
+
+        </div>
+      
+    </section></article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://kyriexu11.github.io/" >
+    &copy;  Secret Room of KyrieXu11 2022 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
