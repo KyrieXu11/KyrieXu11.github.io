@@ -30,7 +30,7 @@ redolog为innodb实现的。
 
 图源：https://blog.csdn.net/weixin_43213517/article/details/117457184
 
-![innodb_redolog](.\innodb_redolog.png)
+![innodb_redolog](innodb_redolog.png)
 
 ### 为什么需要redolog？
 
@@ -95,13 +95,11 @@ binlog为server的日志，不归属任何执行引擎，所有执行引擎都�
 | insert into t0(id, k) values(4,4); // 报错了。ERROR 1062 (23000): Duplicate entry '4' for key 't0.PRIMARY' |                                               |
 | select * from t0; // 查询的结果和上面一样的，但是插入失败。  |                                               |
 
+上面的实验是在rr级别下进行的。
 
+事务B成功的插入了一条数据，但是在事务A中插入相同的数据就会报错，但是查询的时候，结果并没有事务A插入失败的数据行。这个就是幻读。
 
 ## 事务隔离级别
-
-
-
-
 
 ## 一个小实验
 
@@ -113,15 +111,15 @@ binlog为server的日志，不归属任何执行引擎，所有执行引擎都�
 
 现在事务c中更新。
 
-![](事务的小实验\trx_c.png)
+![](事务的小实验/trx_c.png)
 
 然后在事务b中更新，其中事务执行的顺序是在事务c更新之前执行的。
 
-![](事务的小实验\trx_b.png)
+![](事务的小实验/trx_b.png)
 
 最后在事务a中查询
 
-![](事务的小实验\trx_a.png)
+![](事务的小实验/trx_a.png)
 
 可以看出结论是正确的。
 
@@ -202,7 +200,7 @@ b+树的定义是：
 3. 叶子节点
 4. 在查询的时候，都会查询到叶子节点，而不是查询到某个节点值相等就停下。
 
-![](.\b+树.png)
+![](b+树.png)
 
 ## 页分裂和页合并
 
@@ -217,6 +215,8 @@ b+树在插入的时候有算法，那就是会限制一个节点所能持有的
 如果语句是 select * from T where k=5，即普通索引查询方式，则需要先搜索 k 索引树，得到 ID 的值为 500，**再到 ID 索引树搜索一次**。这个过程称为**回表**。
 
 ## 覆盖索引
+
+避免回表的情况就称为覆盖索引。
 
 有一个表person index:(primary_key: id) (id_card,name) (name,age)
 
@@ -233,7 +233,7 @@ select * from person where age between 10 and 30;
 select id from person where age between 10 and 30;
 ```
 
-不光主键，只要是在查询的时候涉及到目标字段就能实现索引覆盖。在上面设置了一个组合索引（id_card,name)，这样也不会回表。
+**不光主键，只要是在查询的时候涉及到目标字段就能实现索引覆盖**。在上面设置了一个组合索引（id_card,name)，这样也不会回表。
 
 ```sql
 select id_card from person where name like 'Jecky%';
@@ -243,7 +243,7 @@ select id_card from person where name like 'Jecky%';
 
 ## 最左前缀匹配原则
 
-复合索引如何节省索引个数呢？
+最左前缀匹配原则是什么？
 
 先说结论：
 
@@ -265,7 +265,7 @@ select * from person where age between 10 and 30;
 
 此时可以给age新建一个单独的索引。
 
-如果一张表有一个联合索引(a,b,c)，则如果查询condition只有a c或者b c是不能走索引的，因为最左匹配要**匹配最左边所有的**
+如果一张表有一个联合索引(a,b,c)，则如果查询condition只有a c或者b c是不能走索引的，因为最左匹配要**匹配索引最左边所有的字段**
 
 
 
@@ -275,9 +275,13 @@ select * from person where age between 10 and 30;
 
 例如：
 
+name和age是联合索引，但是字段有id、name、age、sex；
+
 ```sql
 select * from person where name like 'Jecky%' and age between 10 and 30;
 ```
+
+因为上面语句要查询的字段包括了所有的字段（单针对联合索引覆盖不到所有的字段的情况），所以不会触发覆盖索引，会进行回表。
 
 使用索引查询出以jecky为前缀的，并且在非主键b+树中筛选掉了age在10-30之间的，**只会让那些已经满足该条件的记录回表**。
 
